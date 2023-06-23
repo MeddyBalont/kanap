@@ -11,11 +11,11 @@ function GetKanap(Url) {
             //Ici tu selectionnes la balise sur laquelle tu veux modifier les élements
             let doc = document.getElementById("items");
 
-            for (const products of data) {
-                console.log(products)
+            for (const ListProducts of data) {
+                console.log(ListProducts)
                 //on crée les éléménts html manquants
                 let nouveauA = document.createElement("a")
-                nouveauA.href = `./product.html?id=${products._id}`;
+                nouveauA.href = `./product.html?id=${ListProducts._id}`;
 
                 //Ici la balise article
                 let articleElem = document.createElement("article");
@@ -24,11 +24,18 @@ function GetKanap(Url) {
 
                 //Je te laisse faire la suite pour que tu comprennaines bine
                 let Elem1 = document.createElement("h3");
+                Elem1.setAttribute("class","productname");
+                Elem1.innerText = ListProducts.name;
+                articleElem.appendChild(Elem1);
+
                 let Elem2 = document.createElement("p");
+                Elem2.setAttribute("class","productDescription");
+                Elem2.innerText = ListProducts.description;
+                articleElem.appendChild(Elem2);
 
                 //Ici tu geres les attributs de tes balises
-                imgElem.src = products.imageUrl;
-                imgElem.alt = products.altTxt;
+                imgElem.src = ListProducts.imageUrl;
+                imgElem.alt = ListProducts.altTxt;
 
 
                 //Ici tu ajoutes les elements créés
