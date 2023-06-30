@@ -17,33 +17,28 @@ function GetKanap(Url) {
                 let nouveauA = document.createElement("a")
                 nouveauA.href = `./product.html?id=${ListProducts._id}`;
 
-                //Ici la balise article
+                
                 let articleElem = document.createElement("article");
-                //Ici la balise img
-                let imgElem = document.createElement("img");
+                let kanapImg = document.createElement("img");
+                let kanapName = document.createElement("h3");
+                let kanapDescription = document.createElement("p");
+                let kanapPrice = document.createElement("p");
 
-                //Je te laisse faire la suite pour que tu comprennaines bine
-                let Elem1 = document.createElement("h3");
-                Elem1.setAttribute("class","productname");
-                Elem1.innerText = ListProducts.name;
-                articleElem.appendChild(Elem1);
-
-                let Elem2 = document.createElement("p");
-                Elem2.setAttribute("class","productDescription");
-                Elem2.innerText = ListProducts.description;
-                articleElem.appendChild(Elem2);
-
-                //Ici tu geres les attributs de tes balises
-                imgElem.src = ListProducts.imageUrl;
-                imgElem.alt = ListProducts.altTxt;
-
-
-                //Ici tu ajoutes les elements créés
-                articleElem.appendChild(imgElem);
+                kanapName.setAttribute("class","productname");
+                kanapDescription.setAttribute("class","productDescription");
+                
+                kanapName.innerText = ListProducts.name;
+                kanapImg.src = ListProducts.imageUrl;
+                kanapImg.alt = ListProducts.altTxt;
+                kanapDescription.innerText = ListProducts.description;
+                kanapPrice.textContent = "Prix :" + ListProducts.price + "€";
+                
+                articleElem.appendChild(kanapDescription);
+                articleElem.appendChild(kanapName);
+                articleElem.appendChild(kanapImg);
                 nouveauA.appendChild(articleElem)
-
-                //Ici tu envoie tout à la page
                 doc.appendChild(nouveauA);
+                articleElem.appendChild(kanapPrice);
             }
         }
         )
