@@ -9,6 +9,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 .then (data =>{
     //appel de la procédure 
     affichekanap(data);
+    //function selectionner
     let kanapImgContainer = document.getElementsByClassName("item__img")[0];
 
     let kanapImg = document.getElement("img");

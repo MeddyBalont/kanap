@@ -31,7 +31,7 @@ function GetKanap(Url) {
                 kanapImg.src = ListProducts.imageUrl;
                 kanapImg.alt = ListProducts.altTxt;
                 kanapDescription.innerText = ListProducts.description;
-                kanapPrice.textContent = "Prix :" + ListProducts.price + "€";
+                kanapPrice.textContent = "Prix : " + ListProducts.price + "€";
                 
                 articleElem.appendChild(kanapDescription);
                 articleElem.appendChild(kanapName);
