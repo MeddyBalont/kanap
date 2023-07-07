@@ -18,19 +18,19 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     //function selectionner
 
 
-    //let kanapImgContainer = document.getElementsByClassName("item__img")[0];
+    let kanapImgContainer = document.getElementsByClassName("item__img")[0];
     item = document.createElement("div");
     item.setAttribute("class", "item__img");
     let kanapImg = document.createElement("img");
     kanapImg.setAttribute("src",data.imageUrl)
-    item.appendChild(kanapImg);
+    kanapImgContainer.appendChild(kanapImg);
     
-
-    //let kanapImg = document.getElementsByClassName("item_img");
     
-    //let kanapName = document.getElementById("title");
-    //kanapName.setAttribute("id","title");
-
+    let item1 = document.createElement("h1")
+    item1.setAttribute("id","title");
+    item1.innerText = data.name
+    let kanapTitle = document.getElementById("title")
+    kanapTitle.parentNode.replaceChild(item1,kanapTitle);
     //let kanapPrice = document.getElementById("price");
     //let kanapDescription = document.getElementById("description");
     //console.log(kanapImg);
@@ -41,8 +41,8 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     //kanapDescription.textContent = data.kanapDescription;
 
     //kanapImgContainer.appendChild(kanapImg);
-    //choixCouleurs(data);
-    //SelectionnerQuantity(data);
+    choixCouleurs(data);
+    SelectionnerQuantity(data);
     console.log(data);
 })
 
