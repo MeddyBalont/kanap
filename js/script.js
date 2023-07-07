@@ -11,7 +11,7 @@ function GetKanap(Url) {
             //Ici tu selectionnes la balise sur laquelle tu veux modifier les élements
             let doc = document.getElementById("items");
 
-            for (const ListProducts of data) {
+            for (let ListProducts of data) {
                 console.log(ListProducts)
                 //on crée les éléménts html manquants
                 let kanap_id = document.createElement("a")
@@ -40,9 +40,10 @@ function GetKanap(Url) {
                 doc.appendChild(kanap_id);
                 articleElem.appendChild(kanapPrice);
 
-                document.getElementById("itms").appendChild(kanap_id);
+                document.getElementById("items").appendChild(kanap_id);
             }
-        })
+        }
+        )
         .catch(function (err) { }); //A ne pas oublier dans ton fetch
 
 }
