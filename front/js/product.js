@@ -17,7 +17,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     affichekanap(data);
     //function selectionner
 
-
+    //Affichage de l'image dans la page produit
     let kanapImgContainer = document.getElementsByClassName("item__img")[0];
     item = document.createElement("div");
     item.setAttribute("class", "item__img");
@@ -25,22 +25,28 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     kanapImg.setAttribute("src",data.imageUrl)
     kanapImgContainer.appendChild(kanapImg);
     
-    
+    //Affichage du nom du produit
     let item1 = document.createElement("h1")
     item1.setAttribute("id","title");
     item1.innerText = data.name
     let kanapTitle = document.getElementById("title")
     kanapTitle.parentNode.replaceChild(item1,kanapTitle);
-    //let kanapPrice = document.getElementById("price");
-    //let kanapDescription = document.getElementById("description");
-    //console.log(kanapImg);
 
-    //kanapImg.src = data.imageUrl;
-    //kanapName.textContent = data.name;
-    //kanapPrice.textContent = data.price;
-    //kanapDescription.textContent = data.kanapDescription;
+    //Affichage du prix
+    let item2 = document.getElementById("price");
+    item2.setAttribute("id", "price");
+    item2.innerText = data.price
 
-    //kanapImgContainer.appendChild(kanapImg);
+    //Affichage du produit
+    let item3 = document.createElement("p");
+    item3.setAttribute("id","description");
+    item3.innerText = data.description
+    let kanapDescription = document.getElementById("description");
+    kanapDescription.appendChild(item3);
+    console.log(kanapImg);
+
+    
+
     choixCouleurs(data);
     SelectionnerQuantity(data);
     console.log(data);
