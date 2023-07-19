@@ -89,15 +89,14 @@ function SelectionnerQuantity(){
         let color = document.getElementById("colors").value;
         console.log(color);
         if (
-            //valeur créées dynamiquement
+            //valeur créées dynamiquement 
             selectedKanap.quantity < 1 ||
             selectedKanap.quantity > 100 ||
             selectedKanap.quantity === undefined ||
             color === "" ||
             color === undefined
         ){
-            alert ("Veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100"
-            );
+            alert ("Veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
         } else {
             selectedKanap.color = color;
             //appel la fonction si condition ok
@@ -106,6 +105,67 @@ function SelectionnerQuantity(){
         
     });
 }
+
+//localStorage
+//Canapé et couleurs dans le paniers selon la quantité
+
+
+function saveKanap (kanap) {
+localStorage.setItem("kanap", JSON.stringify(kanap));
+
+}
+function getKanap (){
+let kanap = localStorage.getItem("kanap");
+if(kanap == null){
+    return[];
+  }else{
+    return JSON.parse(kanap);
+  }
+}
+
+function addKanap(product){
+    let kanap = getKanap();
+    let foundProduct = kanap.find(p => p.id == product.id);
+    if(foundProduct != undefined){
+        foundProduct.quantity++;
+    } else {
+        product.quantity = 1;
+        kanap.push(product);
+    }
+    saveKanap(kanap);
+}
+
+function removeFromKanap(product){
+    let kanap = getKanap();
+    kanap = kanap.filter(p => p.id != product.id);
+    saveKanap(kanap);
+}
+
+function changQuantity (product,quantity){
+    let kanap = getKanap();
+    let foundProduct = kanap.find(p => p.id == product.id);
+    if(foundProduct != undefined){
+        foundProduct.quantity += quantity;
+        if(foundProduct.quantity <= 0){
+            removeFromKanap(foundProduct);
+        }else{
+            saveKanap(kanap);
+        }
+    }
+        ;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 let affichekanap = (data)=>{
