@@ -14,7 +14,7 @@ if (productId !== null) {
         })
         .then(data => {
             //appel de la procédure 
-            affichekanap(data);
+            //affichekanap(data);
             //function selectionner
 
             //Affichage de l'image dans la page produit
@@ -85,11 +85,12 @@ if (productId !== null) {
         //On regarde ce qu'il se passe sur le bouton #addToCart pour faire l'action:
         orderButton.addEventListener("click", () => {
             //conditions
-
+            console.log("click")
             let color = document.getElementById("colors").value;
             //console.log(color);
             if (
                 //valeur créées dynamiquement 
+                
                 selectedKanap.quantity < 1 ||
                 selectedKanap.quantity > 100 ||
                 selectedKanap.quantity === undefined ||
@@ -101,11 +102,11 @@ if (productId !== null) {
                 selectedKanap.color = color;
                 //appel la fonction si condition ok
 
-                //DEBUT THIERRY
+           
                 //ajouterPanier();
                 //ici je passe les infos du kanap en parametre
                 ajouterPanier(selectedKanap);
-                //FIN THIERRY
+                
             }
 
         });
@@ -114,7 +115,7 @@ if (productId !== null) {
     //localStorage
     //Canapé et couleurs dans le paniers selon la quantité
 
-    //DEBUT THIERRY
+  
     function ajouterPanier(monKanap) {
 
         //ici, on stoque le canapé courrant dans un objet
@@ -130,13 +131,13 @@ if (productId !== null) {
         if (get_panier) { //si le panier existe
             //Ici verifier si le produit est deja dans le panier //id + couleur
 
-            let identicalObject = get_panier.find((objet) => objet.id == articleToSave.id && objet.color == articleToSave.color);
-            if (identicalObject) {
+            let IdentityKanap = get_panier.find((objet) => objet.id == articleToSave.id && objet.color == articleToSave.color);
+            if (IdentityKanap) {
                 console.log('trouvé')
-                //ici tu dois modifier la quantité
-                //1 - tu recherche le canapé dans ton local storage id + couleur -> filter + concat
-                //2 - tu remplace la quantité
-                //Essaye d'utiliser tes fonctions ou den faire une autre
+                //Convertir les valeurs en numérique (parseInt) 
+                    IdentityKanap.quantity = parseInt(monKanap.quantity);
+                    console.log(IdentityKanap);
+                    saveKanap(get_panier);
 
             } else {
                 console.log("Le panier ne contient pas le canapé en cours !");
@@ -144,18 +145,16 @@ if (productId !== null) {
                 saveKanap(get_panier);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
             }
 
-        } else {
+             } else {
             console.log("Le panier est vide, on ajoute le premier canapé !");
             let createLocalStorage = [];
             createLocalStorage.push(articleToSave);
             saveKanap(createLocalStorage);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
-        }
+            }
 
 
 
     }
-    //FIN THIERRY
-
 
     function saveKanap(kanap) {
         localStorage.setItem("kanap", JSON.stringify(kanap));
@@ -169,54 +168,10 @@ if (productId !== null) {
         }
     }
 
-    function addKanap(product) {
-        let kanap = getKanap();
-        let foundProduct = kanap.find(p => p.id == product.id);
-        if (foundProduct != undefined) {
-            foundProduct.quantity++;
-        } else {
-            product.quantity = 1;
-            kanap.push(product);
-        }
-        saveKanap(kanap);
-    }
-
-    function removeFromKanap(product) {
-        let kanap = getKanap();
-        kanap = kanap.filter(p => p.id != product.id);
-        saveKanap(kanap);
-    }
-
-    function changQuantity(product, quantity) {
-        let kanap = getKanap();
-        let foundProduct = kanap.find(p => p.id == product.id);
-        if (foundProduct != undefined) {
-            foundProduct.quantity += quantity;
-            if (foundProduct.quantity <= 0) {
-                removeFromKanap(foundProduct);
-            } else {
-                saveKanap(kanap);
-            }
-        }
-        ;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    let affichekanap = (data) => {
+ 
+    //let affichekanap = (data) => {
         //console.log(data);
 
-    };
+    //};
 
 }
