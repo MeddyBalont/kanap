@@ -3,17 +3,23 @@ let kanap = JSON.parse(localStorage.getItem("kanap"));
 let products = [];
 
 let orderId ="";
+affichageKanap(kanap)
 
 function getData(productId) {
-  response = fetch('http://localhost:3000/api/products/' + productId)
+fetch(`http://localhost:3000/api/products/${productId}`)
+  .then ((response) => {
+    console.log(response);
+    return response.json();
+  })
   .then(data => {
-    return data.json();
+    //console.log(data.json());
+    //return data.json();
   })
   .catch(error =>{
     error = 'erreur ';
     alert(error);
 })
-console.log(response);
+
 //return response;
 
 }
@@ -25,10 +31,10 @@ async function affichageKanap(){
     document.querySelector("h1").textContent = "Votre panier est vide";
   }else for (let i = 0; i < kanap.length; i++){
     let item = kanap[i];
-    //console.log(kanap);
+    console.log(kanap);
 
-    productData =  getData(item.id);
-    //console.log(productData);
+    productData = getData(item.id);
+    console.log(productData);
   }
 }
 
