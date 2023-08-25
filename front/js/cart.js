@@ -34,7 +34,7 @@ async function affichageKanap() {
         let kanapItems = document.getElementById("cart__items");
 
         //ajout de l'article:
-        let kanapArcticles = document.createElement('articles');
+        let kanapArcticles = document.createElement('article');
         kanapItems.appendChild(kanapArcticles);
         kanapArcticles.data_id = kanap[i]._id;
         kanapArcticles.data_color = kanap[i]._color;
@@ -53,15 +53,18 @@ async function affichageKanap() {
 
 
         //Ajout de la div en lien "article"
-
         let divCartItems = document.createElement("div");
         divCartItems.className = "cart__item__content";
         kanapArcticles.appendChild(divCartItems);
 
         //Ajout de la div lien avec le nom, couleur et prix du produit:
         let kanapDescription = document.createElement("div");
-        kanapDescription.className = "cart__item__description";
+        kanapDescription.className = "cart__item__content__description";
         kanapArcticles.appendChild(kanapDescription);
+
+        //let content = document.createElement("div");
+        //content.className = "cart__item__content__description";
+        //kanapArcticles
 
         //Ajout du "h2" nom du produit:
         let kanapName = document.createElement("h2");
@@ -75,21 +78,69 @@ async function affichageKanap() {
 
         //Ajout d'un "p" pour le prix du produit:
         let KanapPrice = document.createElement("p");
-        kanapArcticles.appendChild(KanapPrice);
+        kanapDescription.appendChild(KanapPrice);
         KanapPrice.innerText = `${productData.price} €`;
-
-
-
-
-
-
-        total = kanap[i].quantity*productData.price + total;
         
-        console.log((kanap[i].quantity*productData.price))
+        //Ajout d'un div lien
+        let divSetting = document.createElement("div");
+        divSetting;className = "cart__item__content__settings";
+        divCartItems.appendChild(divSetting);
 
-        NbrArticles = kanap[i].quantity + NbrArticles
-        
+        //Ajout d'un "p" qui va contenir qté;
+        let divQuantity = document.createElement("div");
+        divCartItems.className = "cart__item__content__settings__quantity";
+        divSetting.appendChild(divQuantity);
+
+        //Ajout d'un "p" qui va contenir la qté
+        let cartQuantity = document.createElement("p");
+        divQuantity.appendChild(cartQuantity);
+        cartQuantity.innerText = "Qté : ";
+
+        //Input de la quantité
+        let inputQuantity = document.createElement("input");
+        divQuantity.appendChild(inputQuantity);
+        inputQuantity.value = kanap[i].quantity;
+        inputQuantity.className = "itemQuantity";
+        inputQuantity.setAttribute("type", "number");
+        inputQuantity.setAttribute("min" , "1");
+        inputQuantity.setAttribute("max", "100");
+        inputQuantity.setAttribute("name", "itemQuantity");
+
+        //création de la div pour supprimer
+        let divSupprimer = document.createElement("div");
+        divSupprimer.className = "cart__item__content__settings__delete";
+        divCartItems.appendChild(divSupprimer);
+
+        //Ajout d'un "p" pour le bouton supprimer
+        let SuppItem = document.createElement("p");
+        SuppItem.className = "deleteItem";
+        divSupprimer.appendChild(SuppItem);
+        SuppItem.innerText = "Supprimer";
+
+        const totalProduit = () => {
+            let itemQuantity = document.getElementsByClassName("itemQuantity");
+            let produitQuantity = itemQuantity.length;
+
+            let totalArticle = 0;
+
+            for (let j = 0; j < produitQuantity; ++j ) {
+                totalArticle += itemQuantity[j].valueAsNumber;
+            }
+
+            let totalPrix = 0;
+            for(let k = 0; k< produitQuantity; ++k) {
+                totalPrix += itemQuantity[k].valueAsNumber * productData.price;
+            }
+
+            let totalQuantity = document.getElementById("totalQuantity");
+
+            // On affiche la quantité sur la page html:
+            totalQuantity.innerText = totalArticle;
+
+            let TotalDesPoduits = document.getElementById("totalPrice");
+            TotalDesPoduits.innerText = totalPrix;
+        }
+        totalProduit();
     }
-    console.warn(total)
-    console.log(NbrArticles);
+    
 }
