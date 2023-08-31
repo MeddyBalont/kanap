@@ -1,5 +1,5 @@
 let kanap = JSON.parse(localStorage.getItem("kanap"));
-
+console.log(kanap);
 let products = [];
 
 let orderId = "";
@@ -17,11 +17,12 @@ async function getData(productId) {
         })
 }
 
+
 //AFFICHAGE DES PRODUITS
 
 async function affichageKanap() {
-    total = 0
-    NbrArticles = 0
+    let totalPrix = 0;
+    let totalArticle = 0;
     if (kanap === null || kanap.length === 0) {
         document.querySelector("h1").textContent = "Votre panier est vide";
     } else for (let i = 0; i < kanap.length; i++) {
@@ -109,7 +110,7 @@ async function affichageKanap() {
         //création de la div pour supprimer
         let divSupprimer = document.createElement("div");
         divSupprimer.className = "cart__item__content__settings__delete";
-        divCartItems.appendChild(divSupprimer);
+        divSetting.appendChild(divSupprimer);
 
         //Ajout d'un "p" pour le bouton supprimer
         let SuppItem = document.createElement("p");
@@ -117,30 +118,43 @@ async function affichageKanap() {
         divSupprimer.appendChild(SuppItem);
         SuppItem.innerText = "Supprimer";
 
-        const totalProduit = () => {
-            let itemQuantity = document.getElementsByClassName("itemQuantity");
-            let produitQuantity = itemQuantity.length;
+        //Total articles
+        totalArticle += parseInt(item.quantity);
+            
+        //Total prix
+        totalPrix += parseInt(item.quantity) * productData.price;
+            
+        //affichages
+        let totalQuantity = document.getElementById("totalQuantity");
 
-            let totalArticle = 0;
+        // On affiche la quantité sur la page html:
+        totalQuantity.innerText = totalArticle;
 
-            for (let j = 0; j < produitQuantity; ++j ) {
-                totalArticle += itemQuantity[j].valueAsNumber;
-            }
+        let TotalDesPoduits = document.getElementById("totalPrice");
+        TotalDesPoduits.innerText = totalPrix;
+        
 
-            let totalPrix = 0;
-            for(let k = 0; k< produitQuantity; ++k) {
-                totalPrix += itemQuantity[k].valueAsNumber * productData.price;
-            }
 
-            let totalQuantity = document.getElementById("totalQuantity");
 
-            // On affiche la quantité sur la page html:
-            totalQuantity.innerText = totalArticle;
 
-            let TotalDesPoduits = document.getElementById("totalPrice");
-            TotalDesPoduits.innerText = totalPrix;
+        const deleteProduct = () => {
+            deleteItem.addEventListener("click", () => {
+                if ( window.confirm("Voulez vous supprimer ce produit ?")) {
+                   let deleteId = kanap[i]._id;
+                    let deleteColor = kanap[i]._color;
+
+                   kanap = kanap.filter(el => el._id !== deleteId || el.color !== deleteColor);
+
+                    localStorage.setItem("kanap", JSON.stringify(kanap));
+                }
+
+                   location.reload();
+            });
         }
-        totalProduit();
+       deleteProduct();
+        
     }
+   
     
-}
+
+}  
