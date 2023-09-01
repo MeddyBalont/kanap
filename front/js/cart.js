@@ -132,29 +132,26 @@ async function affichageKanap() {
 
         let TotalDesPoduits = document.getElementById("totalPrice");
         TotalDesPoduits.innerText = totalPrix;
+
         
-
-
-
-
-        const deleteProduct = () => {
-            deleteItem.addEventListener("click", () => {
+        SuppItem.addEventListener("click", () => {
                 if ( window.confirm("Voulez vous supprimer ce produit ?")) {
                    let deleteId = kanap[i]._id;
                     let deleteColor = kanap[i]._color;
+                    
 
                    kanap = kanap.filter(el => el._id !== deleteId || el.color !== deleteColor);
 
                     localStorage.setItem("kanap", JSON.stringify(kanap));
+                    console.log(kanap);
                 }
-
+                
                    location.reload();
             });
+            
         }
-       deleteProduct();
         
+    
     }
-   
     
 
-}  
