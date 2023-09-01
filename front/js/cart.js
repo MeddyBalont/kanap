@@ -37,9 +37,12 @@ async function affichageKanap() {
         //ajout de l'article:
         let kanapArcticles = document.createElement('article');
         kanapItems.appendChild(kanapArcticles);
-        kanapArcticles.data_id = kanap[i]._id;
-        kanapArcticles.data_color = kanap[i]._color;
+        //kanapArcticles.data_id = kanap[i]._id;
+        //kanapArcticles.data_color = kanap[i]._color;
         kanapArcticles.className = "cart__item";
+        kanapArcticles.setAttribute("data-id" , kanap[i].id)
+        kanapArcticles.setAttribute("data-color" , kanap[i].color)
+
 
         //Ajout des éléments dans la div:
         let kanapImgContainer = document.createElement("div")
@@ -61,11 +64,7 @@ async function affichageKanap() {
         //Ajout de la div lien avec le nom, couleur et prix du produit:
         let kanapDescription = document.createElement("div");
         kanapDescription.className = "cart__item__content__description";
-        kanapArcticles.appendChild(kanapDescription);
-
-        //let content = document.createElement("div");
-        //content.className = "cart__item__content__description";
-        //kanapArcticles
+        divCartItems.appendChild(kanapDescription);
 
         //Ajout du "h2" nom du produit:
         let kanapName = document.createElement("h2");
@@ -84,8 +83,8 @@ async function affichageKanap() {
         
         //Ajout d'un div lien
         let divSetting = document.createElement("div");
-        divSetting;className = "cart__item__content__settings";
-        divCartItems.appendChild(divSetting);
+        divSetting.className = "cart__item__content__settings";
+        kanapDescription.appendChild(divSetting);
 
         //Ajout d'un "p" qui va contenir qté;
         let divQuantity = document.createElement("div");
@@ -132,26 +131,30 @@ async function affichageKanap() {
 
         let TotalDesPoduits = document.getElementById("totalPrice");
         TotalDesPoduits.innerText = totalPrix;
-
-        
-        SuppItem.addEventListener("click", () => {
-                if ( window.confirm("Voulez vous supprimer ce produit ?")) {
-                   let deleteId = kanap[i]._id;
-                    let deleteColor = kanap[i]._color;
-                    
-
-                   kanap = kanap.filter(el => el._id !== deleteId || el.color !== deleteColor);
-
-                    localStorage.setItem("kanap", JSON.stringify(kanap));
-                    console.log(kanap);
-                }
-                
-                   location.reload();
-            });
-            
+  
         }
-        
+     deleteKanap();   
     
     }
-    
+    function deleteKanap(){
+        const deleteB = document.querySelectorAll(".deleteItem");
+        deleteB.forEach((db) => {
+    db.addEventListener("click", (event) => {
+        event.preventDefault();
+        console.log(event.target.getAttribute("data-id"));
+                //if ( window.confirm("Voulez vous supprimer ce produit ?")) {
+                //let deleteId = kanap[i].id;
+                //let deleteColor = kanap[i].color;
+                    
 
+                //kanap = kanap.filter(el => el._id !== deleteId || el.color !== deleteColor);
+
+               // localStorage.setItem("kanap", JSON.stringify(kanap));
+                    
+                //}
+               
+                   
+            });
+        })
+
+}
