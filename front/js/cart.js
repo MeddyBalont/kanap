@@ -105,6 +105,7 @@ async function affichageKanap() {
         inputQuantity.setAttribute("min" , "1");
         inputQuantity.setAttribute("max", "100");
         inputQuantity.setAttribute("name", "itemQuantity");
+        inputQuantity.setAttribute("value", kanap[i].quantity)
 
         //création de la div pour supprimer
         let divSupprimer = document.createElement("div");
@@ -134,27 +135,52 @@ async function affichageKanap() {
   
         }
      deleteKanap();   
-    
+    quantityChanged();
     }
     function deleteKanap(){
         const deleteB = document.querySelectorAll(".deleteItem");
         deleteB.forEach((db) => {
     db.addEventListener("click", (event) => {
         event.preventDefault();
-        console.log(event.target.getAttribute("data-id"));
-                //if ( window.confirm("Voulez vous supprimer ce produit ?")) {
-                //let deleteId = kanap[i].id;
-                //let deleteColor = kanap[i].color;
+                let myArticcle = db.closest('article');
+                console.log(myArticcle);
+                console.log(myArticcle.dataset.id);
+                console.log(myArticcle.dataset.color);
+                if ( window.confirm("Voulez vous supprimer ce produit ?")) {
+                let deleteId = myArticcle.dataset._id;
+                let deleteColor = myArticcle.dataset.color;
                     
 
-                //kanap = kanap.filter(el => el._id !== deleteId || el.color !== deleteColor);
-
-               // localStorage.setItem("kanap", JSON.stringify(kanap));
-                    
-                //}
-               
-                   
+                kanap = kanap.filter(el => el._id !== deleteId || el.color !== deleteColor);
+                        console.log(kanap);
+                localStorage.setItem("kanap", JSON.stringify(kanap));
+                document.location.reload();
+                }
             });
         })
 
 }
+
+function quantityChanged(){
+    const ModifQuantite = document.querySelectorAll(".itemQuantity");
+    ModifQuantite.forEach((Md) =>{
+        Md.addEventListener("change", (event) => {
+            event.preventDefault();
+            console.log(ModifQuantite);
+            let myArticcle = Md.closest("article");
+            console.log(myArticcle);
+            console.log(myArticcle.dataset.id);
+            console.log(myArticcle.dataset.color);
+            console.log(myArticcle.dataset)
+        })
+    });
+    
+        
+            // On rafraichi la quantité dans le localStorage:
+            //localStorage.setItem("productStorage", JSON.stringify(selectionClient));
+
+        //});
+    
+
+
+    }
