@@ -1,3 +1,4 @@
+
 const productId = new URLSearchParams(window.location.search).get("id");
 //console.log(productId);
 
@@ -156,7 +157,7 @@ if (productId !== null) {
 
     }
 
-    function saveKanap(kanap) {
+     function saveKanap(kanap) {
         localStorage.setItem("kanap", JSON.stringify(kanap));
     }
     function getKanap() {

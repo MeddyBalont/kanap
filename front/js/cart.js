@@ -1,3 +1,4 @@
+
 let kanap = JSON.parse(localStorage.getItem("kanap"));
 console.log(kanap);
 let products = [];
@@ -149,7 +150,6 @@ async function affichageKanap() {
                 if ( window.confirm("Voulez vous supprimer ce produit ?")) {
                 let deleteId = myArticcle.dataset._id;
                 let deleteColor = myArticcle.dataset.color;
-                    
 
                 kanap = kanap.filter(el => el._id !== deleteId || el.color !== deleteColor);
                         console.log(kanap);
@@ -167,17 +167,30 @@ function quantityChanged(){
         Md.addEventListener("change", (event) => {
             event.preventDefault();
             console.log(ModifQuantite);
-            let myArticcle = Md.closest("article");
-            console.log(myArticcle);
-            console.log(myArticcle.dataset.id);
-            console.log(myArticcle.dataset.color);
-            console.log(myArticcle.dataset)
-        })
+            let myQte = Md.closest(".itemQuantity");
+           
+            console.log(myQte.value);
+            let myArticle = Md.closest('article')
+            let kanapId = myArticle.dataset._id;
+            let kanapColor = myArticle.dataset.color;
+
+            let resultFinal =  kanap.find((p) => (p._id == kanapId) && (p.colors == kanapColor));
+            if (resultFinal){
+                console.log("je suis à l'intérieur");
+                if(myQte > 0)
+                resultFinal.quantity = quantity;
+            }
+            
+            
+            localStorage.setItem("kanap", JSON.stringify(kanap));
+            //document.location.reload();
+           
+        });
     });
     
         
             // On rafraichi la quantité dans le localStorage:
-            //localStorage.setItem("productStorage", JSON.stringify(selectionClient));
+            
 
         //});
     
