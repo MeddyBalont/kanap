@@ -168,20 +168,22 @@ function quantityChanged(){
             event.preventDefault();
             console.log(ModifQuantite);
             let myQte = Md.closest(".itemQuantity");
+            console.log(myQte);
            
-            console.log(myQte.value);
+            
             let myArticle = Md.closest('article')
-            let kanapId = myArticle.dataset._id;
+            let kanapId = myArticle.dataset.id;
             let kanapColor = myArticle.dataset.color;
-
-            let resultFinal =  kanap.find((p) => (p._id == kanapId) && (p.colors == kanapColor));
+            
+            let resultFinal =  kanap.find((p) => p.id == kanapId && p.color == kanapColor);
+            //let IdentityKanap = kanap.find((objet) => objet.id == articleToSave.id && objet.color == articleToSave.color);
             if (resultFinal){
-                console.log("je suis à l'intérieur");
-                if(myQte > 0)
-                resultFinal.quantity = quantity;
-            }
-            
-            
+                
+                if (parseInt(myQte.value) > 0){
+                    
+                resultFinal.quantity = parseInt(myQte.value) ;
+           }
+        }
             localStorage.setItem("kanap", JSON.stringify(kanap));
             //document.location.reload();
            
