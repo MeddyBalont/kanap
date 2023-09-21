@@ -168,9 +168,7 @@ function quantityChanged(){
             event.preventDefault();
             console.log(ModifQuantite);
             let myQte = Md.closest(".itemQuantity");
-            console.log(myQte);
            
-            
             let myArticle = Md.closest('article')
             let kanapId = myArticle.dataset.id;
             let kanapColor = myArticle.dataset.color;
@@ -199,3 +197,31 @@ function quantityChanged(){
 
 
     }
+
+    /*--------------------------------------
+             FORMULAIRE
+    --------------------------------------*/
+    function ValidName(value){
+        return /^[A-Z-a-z\s]{3,25}$/test(value)
+    }
+
+    function ValidLieu(value){
+        return /^[0-9]{1,5}[a-z-A-Z-.,]{2,8}[3.40]$/test(value)
+    }
+
+    function Validmail(value){
+        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/test(value)
+    }
+
+    //                  VALIDATION DU PRENOM           //
+    const prenom = document.getElementById("firstname");
+    prenom.addEventListener("change", (e) => {
+        if (ValidName(prenom.value)){
+            NameError.classList.add("opacity")
+            NameError.textContent = "";
+        } else {
+            NameError.classList.remove("opacity");
+            NameError.classList.textContent = 'Doit contenir entre 3 et 25 caractères';
+            e.preventDefault()
+        }
+    });
