@@ -201,16 +201,16 @@ function quantityChanged(){
     /*--------------------------------------
              FORMULAIRE
     --------------------------------------*/
-    function ValidName(value){
-        return /^[A-Z-a-z\s]{3,25}$/test(value)
+    function ValidName(value) {
+        return /^[A-Z-a-z\s]{3,25}$/.test(value)
     }
 
-    function ValidLieu(value){
-        return /^[0-9]{1,5}[a-z-A-Z-.,]{2,8}[3.40]$/test(value)
+    function ValidLieu(value) {
+        return /^[0-9]{1,5}[a-z-A-Z-.,]{2,8}[3.40]$/.test(value)
     }
 
-    function Validmail(value){
-        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/test(value)
+    function Validmail(value) {
+        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(value)
     }
 
     //                  VALIDATION DU PRENOM           //
