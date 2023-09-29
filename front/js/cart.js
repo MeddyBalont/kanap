@@ -136,7 +136,11 @@ async function affichageKanap() {
   
         }
      deleteKanap();   
-    quantityChanged();
+     quantityChanged();
+     verifFirstName();
+     verifLastName();
+     verifAdresse();
+     verifVille();
     }
     function deleteKanap(){
         const deleteB = document.querySelectorAll(".deleteItem");
@@ -197,16 +201,21 @@ function quantityChanged(){
 
 
     }
-
+    
     /*--------------------------------------
              FORMULAIRE
     --------------------------------------*/
     function ValidName(value) {
-        return /^[A-Z-a-z\s]{3,25}$/.test(value)
+        return /^[A-Za-z]+$/.test(value)
     }
 
     function ValidLieu(value) {
-        return /^[0-9]{1,5}[a-z-A-Z-.,]{2,8}[3.40]$/.test(value)
+        return /^[0-9]{1,5}[a-z-A-Z\s]{2,8}[a-z-A-Z -.,]{3,40}$/.test(value)
+        
+    }
+
+    function ValidVille(value){
+        return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
     }
 
     function Validmail(value) {
@@ -214,14 +223,87 @@ function quantityChanged(){
     }
 
     //                  VALIDATION DU PRENOM           //
-    const prenom = document.getElementById("firstname");
-    prenom.addEventListener("change", (e) => {
+    function verifFirstName() {
+    const prenom = document.getElementById("firstName");
+    prenom.addEventListener( "change", (e) => {
+        //console.log(prenom)
         if (ValidName(prenom.value)){
-            NameError.classList.add("opacity")
-            NameError.textContent = "";
+            firstNameErrorMsg.classList.add("opacity")
+            firstNameErrorMsg.textContent = "";
+            if(prenom.value.length  < 3 || prenom.value.length > 26 ) {
+                firstNameErrorMsg.textContent = 'Doit contenir entre 3 et 25 caractères'
+                return false ;
+            }else{
+                return true ;
+            }
         } else {
-            NameError.classList.remove("opacity");
-            NameError.classList.textContent = 'Doit contenir entre 3 et 25 caractères';
+            firstNameErrorMsg.classList.remove("opacity");
+            firstNameErrorMsg.textContent = 'Ne doit pas contenir de chiffres';
             e.preventDefault()
+            return false ;
+       } 
+    });
+}
+
+    function verifLastName() {
+    const nom = document.getElementById("lastName");
+    nom.addEventListener('change', (e) => {
+        if(ValidName(nom.value)){
+            lastNameErrorMsg.classList.add("opacity")
+            lastNameErrorMsg.textContent="";
+            if(nom.value.length < 3 || nom.value.length > 26 ){
+                lastNameErrorMsg.textContent = 'Doit contenir entre 3 et 25 caractères'
+                return false ;
+            } else {
+                return true ;
+            }
+            
+        } else {
+            lastNameErrorMsg.classList.remove("opacity");
+            lastNameErrorMsg.textContent = 'Ne doit pas contenir de chiffres'
+            e.preventDefault()
+            return false ;
         }
     });
+}
+
+
+function verifAdresse() {
+    const adresse = document.getElementById("address");
+    adresse.addEventListener( "change", (e) => {
+        console.log(adresse)
+    if (ValidLieu(adresse.value)){
+        addressErrorMsg.classList.add("opacity");
+        addressErrorMsg.textContent=""; 
+        return false
+    } else {
+        addressErrorMsg.classList.remove("opacity");
+        addressErrorMsg.textContent = 'Adresse invalide, exemple 1 rue François mansart';
+        e.preventDefault()
+        return false ;
+    }
+
+});
+
+}
+
+function verifVille() {
+    const ville = document.getElementById("city");
+    ville.addEventListener("change" , (e) => {
+        if(ValidVille(ville.value)){
+            console.log(ville);
+            cityErrorMsg.classList.add("opacity");
+            cityErrorMsg.textContent="";
+            return false;
+            
+        } else {
+            
+            cityErrorMsg.classList.remove("opacity");
+            cityErrorMsg.textContent = "Ne doit pas contenir de chiffres"
+            e.preventDefault()
+            return false
+        }
+    })
+}
+
+    
