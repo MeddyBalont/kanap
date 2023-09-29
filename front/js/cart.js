@@ -137,10 +137,12 @@ async function affichageKanap() {
         }
      deleteKanap();   
      quantityChanged();
-     verifFirstName();
-     verifLastName();
-     verifAdresse();
-     verifVille();
+     //verifFirstName();
+     //verifLastName();
+     //verifAdresse();
+     //verifVille();
+     //verifMail();
+     //verifForm();
     }
     function deleteKanap(){
         const deleteB = document.querySelectorAll(".deleteItem");
@@ -205,8 +207,136 @@ function quantityChanged(){
     /*--------------------------------------
              FORMULAIRE
     --------------------------------------*/
-    function ValidName(value) {
-        return /^[A-Za-z]+$/.test(value)
+    const btnvalid = document.getElementById("order");
+    btnvalid.addEventListener("click" ,(event) =>{
+        function verifFirstName() {
+            const prenom = document.getElementById("firstName");
+            prenom.addEventListener( "change", (e) => {
+                //console.log(prenom)
+                if (ValidName(prenom.value)){
+                    firstNameErrorMsg.classList.add("opacity")
+                    firstNameErrorMsg.textContent = "";
+                    if(prenom.value.length  < 3 || prenom.value.length > 26 ) {
+                        firstNameErrorMsg.textContent = 'Doit contenir entre 3 et 25 caractères'
+                        return false ;
+                    }else{
+                        return true ;
+                    }
+                } else {
+                    firstNameErrorMsg.classList.remove("opacity");
+                    firstNameErrorMsg.textContent = 'Ne doit pas contenir de chiffres';
+                    e.preventDefault()
+                    return false ;
+               } 
+            });
+        }
+        
+            function verifLastName() {
+            const nom = document.getElementById("lastName");
+            nom.addEventListener('change', (e) => {
+                if(ValidName(nom.value)){
+                    lastNameErrorMsg.classList.add("opacity")
+                    lastNameErrorMsg.textContent="";
+                    if(nom.value.length < 3 || nom.value.length > 26 ){
+                        lastNameErrorMsg.textContent = 'Doit contenir entre 3 et 25 caractères'
+                        return false ;
+                    } else {
+                        return true ;
+                    }
+                    
+                } else {
+                    lastNameErrorMsg.classList.remove("opacity");
+                    lastNameErrorMsg.textContent = 'Ne doit pas contenir de chiffres'
+                    e.preventDefault()
+                    return false ;
+                }
+            });
+        }
+        
+        
+        function verifAdresse() {
+            const adresse = document.getElementById("address");
+            adresse.addEventListener( "change", (e) => {
+                console.log(adresse)
+            if (ValidLieu(adresse.value)){
+                addressErrorMsg.classList.add("opacity");
+                addressErrorMsg.textContent=""; 
+                return true;
+            } else {
+                addressErrorMsg.classList.remove("opacity");
+                addressErrorMsg.textContent = 'Adresse invalide, exemple 1 rue François mansart';
+                e.preventDefault()
+                return false ;
+            }
+        
+        });
+        
+        }
+        
+        function verifVille() {
+            const ville = document.getElementById("city");
+            ville.addEventListener("change" , (e) => {
+                if(ValidVille(ville.value)){
+                    console.log(ville);
+                    cityErrorMsg.classList.add("opacity");
+                    cityErrorMsg.textContent="";
+                    return true;
+                    
+                } else {
+                    
+                    cityErrorMsg.classList.remove("opacity");
+                    cityErrorMsg.textContent = "Ne doit pas contenir de chiffres"
+                    e.preventDefault()
+                    return false;
+                }
+            });
+        }
+        
+        function verifMail() {
+            const mail = document.getElementById("email");
+            mail.addEventListener("change", (e) =>{
+                if(Validmail(mail.value)){
+                    emailErrorMsg.classList.add("opacity");
+                    emailErrorMsg.textContent="";
+                    return true;
+                } else {
+                    emailErrorMsg.classList.remove("opacity");
+                    emailErrorMsg.textContent = "email invalide"
+                    e.preventDefault()
+                    return false;
+                }
+            });
+        }
+
+        function ValidName(value) {
+            return /^([A-Za-z\s-éèàù]{3,20})$/.test(value)
+        }
+    
+        function ValidLieu(value) {
+            return /^[0-9]{1,5}[a-z-A-Z\s]{2,8}[a-z-A-Z -.,]{3,40}$/.test(value)
+            
+        }
+    
+        function ValidVille(value){
+            //return /^([A-Za-z\s-\]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
+            return /^([A-Za-z\s-éèàù]{3,20})$/.test(value)
+        }
+    
+        function Validmail(value) {
+            return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(value)
+        }
+    
+ let ValidOk = verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail();
+    if (ValidOk) {
+        alert("Ok")
+    } else{
+        alert("Pas ok")
+   }
+   return false;
+    })
+
+   /* function ValidName(value) {
+        return /^([A-Za-z\s-éèàù]{3,20})$/.test(value)
     }
 
     function ValidLieu(value) {
@@ -215,15 +345,16 @@ function quantityChanged(){
     }
 
     function ValidVille(value){
-        return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
+        //return /^([A-Za-z\s-\]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
+        return /^([A-Za-z\s-éèàù]{3,20})$/.test(value)
     }
 
     function Validmail(value) {
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(value)
-    }
+    }*./
 
     //                  VALIDATION DU PRENOM           //
-    function verifFirstName() {
+    /*function verifFirstName() {
     const prenom = document.getElementById("firstName");
     prenom.addEventListener( "change", (e) => {
         //console.log(prenom)
@@ -275,7 +406,7 @@ function verifAdresse() {
     if (ValidLieu(adresse.value)){
         addressErrorMsg.classList.add("opacity");
         addressErrorMsg.textContent=""; 
-        return false
+        return true;
     } else {
         addressErrorMsg.classList.remove("opacity");
         addressErrorMsg.textContent = 'Adresse invalide, exemple 1 rue François mansart';
@@ -294,16 +425,40 @@ function verifVille() {
             console.log(ville);
             cityErrorMsg.classList.add("opacity");
             cityErrorMsg.textContent="";
-            return false;
+            return true;
             
         } else {
             
             cityErrorMsg.classList.remove("opacity");
             cityErrorMsg.textContent = "Ne doit pas contenir de chiffres"
             e.preventDefault()
-            return false
+            return false;
         }
-    })
+    });
 }
 
+function verifMail() {
+    const mail = document.getElementById("email");
+    mail.addEventListener("change", (e) =>{
+        if(Validmail(mail.value)){
+            emailErrorMsg.classList.add("opacity");
+            emailErrorMsg.textContent="";
+            return true;
+        } else {
+            emailErrorMsg.classList.remove("opacity");
+            emailErrorMsg.textContent = "email invalide"
+            e.preventDefault()
+            return false;
+        }
+    });
+}
+
+ //function verifForm() {
+   // let ValidOk = verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail();
+    //if (ValidOk) {
+        //alert("Ok")
+    //} else{
+     //   alert("Pas ok")
+   // }
+//}*/
     
