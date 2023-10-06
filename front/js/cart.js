@@ -328,20 +328,24 @@ const contact = {
         //ICI, tu peut faire afficher un message d'erreur pour siginfier que le formaulaire ne sera pas soumis
         alert("Pas ok")
     }
-    var orderId = "";
+    //var orderId = "";
     //console.log('valodeok :', ValidOk);
     function Server () {
-
-        fetch("http://localhost:3000/api/products/order/", {
+        let command = {
+            contact : contact,
+            products : products,
+        }
+        fetch("http://localhost:3000/api/products/order", {
             method: "POST",
-            body:JSON.stringify({contact,products}),
-            header: {
-                "content-Type": "application/json",
+            body:JSON.stringify(command),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
             },
         })
-        .then((response) =>{
-            return response.json();
-        })
+        //.then((response) =>{
+            //return response.json();
+        //})
         .then((server) => {
             orderId = server.orderId;
             if (orderId !=""){
