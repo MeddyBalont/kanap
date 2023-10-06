@@ -197,9 +197,19 @@ function quantityChanged() {
          FORMULAIRE
 --------------------------------------*/
 const btnvalid = document.getElementById("order");
+
 btnvalid.addEventListener("click", (event) => {
     event.preventDefault();
 
+const contact = {
+            firstName: document.querySelector("#firstName").value,
+            lastName: document.querySelector("#lastName").value,
+            address:  document.querySelector("#address").value,
+            city: document.querySelector("#city").value,
+            email: document.querySelector("#email").value,
+    };
+
+    
     function verifFirstName() {
         const prenom = document.getElementById("firstName");
         if (ValidName(prenom.value)) {
@@ -279,17 +289,17 @@ btnvalid.addEventListener("click", (event) => {
     }
 
     function ValidName(value) {
-        return /^([A-Za-z\s-Ã©Ã¨Ã Ã¹]{3,20})$/.test(value)
+        return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
     }
 
     function ValidLieu(value) {
-        return /^[0-9]{1,5}[a-z-A-Z\s]{2,8}[a-z-A-Z -.,]{3,40}$/.test(value)
+        return /^([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]{1,100})?([-]{0,1})?([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]{1,100})$/.test(value)
 
     }
 
     function ValidVille(value) {
         //return /^([A-Za-z\s-\]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
-        return /^([A-Za-z\s-Ã©Ã¨Ã Ã¹]{3,20})$/.test(value)
+        return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
     }
 
     function Validmail(value) {
@@ -298,11 +308,16 @@ btnvalid.addEventListener("click", (event) => {
 
     //Controle de tous les champs. Si un champ est en erreur alor la variable ValidOK sera Ã  false et le formaulaire ne ser pas soumis.
     let ValidOk = verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail();
-
+   
     
-    
-    let produit = [];
-    if (ValidOk) {
+    if (ValidOk) { 
+        localStorage.setItem("contact",JSON.stringify(contact));
+         kanap = JSON.parse(localStorage.getItem("kanap"));
+        for (let i = 0; i < kanap.length; i++){
+            let item = kanap[i];
+            products.push(item.id)
+        }
+        Server();
         //Si tout est ok on sauvergade et on envoie les infos
        
         //ICI il te faut passer l'objet contact et un tableau de
@@ -313,9 +328,26 @@ btnvalid.addEventListener("click", (event) => {
         //ICI, tu peut faire afficher un message d'erreur pour siginfier que le formaulaire ne sera pas soumis
         alert("Pas ok")
     }
-
+    var orderId = "";
     //console.log('valodeok :', ValidOk);
+    function Server () {
 
+        fetch("http://localhost:3000/api/products/order/", {
+            method: "POST",
+            body:JSON.stringify({contact,products}),
+            header: {
+                "content-Type": "application/json",
+            },
+        })
+        .then((response) =>{
+            return response.json();
+        })
+        .then((server) => {
+            orderId = server.orderId;
+            if (orderId !=""){
+            alert("Votre commande a bien été enregistré");
+            location.href = "confirmation.html?id=" + orderId;
+            }
+        })
+    }
 })
-const FinalOrder = JSON.parse(localStorage.getItem("productStorage"));
-console.log(FinalOrder);
