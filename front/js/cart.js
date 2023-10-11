@@ -3,7 +3,6 @@ let kanap = JSON.parse(localStorage.getItem("kanap"));
 console.log("kanap");
 let products = [];
 
-let orderId = "";
 affichageKanap()
 
 async function getData(productId) {
@@ -38,8 +37,6 @@ async function affichageKanap() {
         //ajout de l'article:
         let kanapArcticles = document.createElement('article');
         kanapItems.appendChild(kanapArcticles);
-        //kanapArcticles.data_id = kanap[i]._id;
-        //kanapArcticles.data_color = kanap[i]._color;
         kanapArcticles.className = "cart__item";
         kanapArcticles.setAttribute("data-id", kanap[i].id)
         kanapArcticles.setAttribute("data-color", kanap[i].color)
@@ -177,7 +174,6 @@ function quantityChanged() {
             let kanapColor = myArticle.dataset.color;
 
             let resultFinal = kanap.find((p) => p.id == kanapId && p.color == kanapColor);
-            //let IdentityKanap = kanap.find((objet) => objet.id == articleToSave.id && objet.color == articleToSave.color);
             if (resultFinal) {
 
                 if (parseInt(myQte.value) > 0) {
@@ -264,7 +260,6 @@ const contact = {
     function verifVille() {
         const ville = document.getElementById("city");
         if (ValidVille(ville.value)) {
-            //console.log(ville);
             cityErrorMsg.classList.add("opacity");
             cityErrorMsg.textContent = "";
             return true;
@@ -298,7 +293,6 @@ const contact = {
     }
 
     function ValidVille(value) {
-        //return /^([A-Za-z\s-\]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
         return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
     }
 
@@ -306,30 +300,17 @@ const contact = {
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(value)
     }
 
-    //Controle de tous les champs. Si un champ est en erreur alor la variable ValidOK sera Ã  false et le formaulaire ne ser pas soumis.
-    let ValidOk = verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail();
-   
-    
     if (verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail()) { 
         localStorage.setItem("contact",JSON.stringify(contact));
         Server();
-        //Si tout est ok on sauvergade et on envoie les infos
        
-        //ICI il te faut passer l'objet contact et un tableau de
-        //comme prÃ©cisÃ© dans https://course.oc-static.com/projects/DWJ_FR_P5/DW+P5+-+Specifications+fonctionnelles.pdf
-        // en derniere page
     } else {
-
-        //ICI, tu peut faire afficher un message d'erreur pour siginfier que le formaulaire ne sera pas soumis
-        alert("Pas ok")
+        
+        alert("Veillez bien remplir votre formulaire !")
     }
-    //var orderId = "";
-    //console.log('valodeok :', ValidOk);
+    
     function Server () {
-        let command = {
-            contact : contact,
-            products : products,
-        }
+       
         fetch("http://localhost:3000/api/products/order", {
             method: "POST",
             body:JSON.stringify({contact,products}),
