@@ -1,6 +1,6 @@
 
 let kanap = JSON.parse(localStorage.getItem("kanap"));
-console.log(kanap);
+console.log("kanap");
 let products = [];
 
 let orderId = "";
@@ -310,13 +310,8 @@ const contact = {
     let ValidOk = verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail();
    
     
-    if (ValidOk) { 
+    if (verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail()) { 
         localStorage.setItem("contact",JSON.stringify(contact));
-         kanap = JSON.parse(localStorage.getItem("kanap"));
-        for (let i = 0; i < kanap.length; i++){
-            let item = kanap[i];
-            products.push(item.id)
-        }
         Server();
         //Si tout est ok on sauvergade et on envoie les infos
        
@@ -337,15 +332,14 @@ const contact = {
         }
         fetch("http://localhost:3000/api/products/order", {
             method: "POST",
-            body:JSON.stringify(command),
+            body:JSON.stringify({contact,products}),
             headers: {
-                Accept: "application/json",
                 "Content-Type": "application/json",
             },
         })
-        //.then((response) =>{
-            //return response.json();
-        //})
+        .then((response) =>{
+            return response.json();
+        })
         .then((server) => {
             orderId = server.orderId;
             if (orderId !=""){
