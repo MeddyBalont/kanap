@@ -146,16 +146,16 @@ if (productId !== null) {
                 saveKanap(get_panier);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
             }
 
-             } else {
-            console.log("Le panier est vide, on ajoute le premier canapé !");
-            let createLocalStorage = [];
-            createLocalStorage.push(articleToSave);
-            saveKanap(createLocalStorage);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
+            } else {
+                console.log("Le panier est vide, on ajoute le premier canapé !");
+                let createLocalStorage = [];
+                createLocalStorage.push(articleToSave);
+                saveKanap(createLocalStorage);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
             }
 
 
 
-    }
+        }
 
      function saveKanap(kanap) {
         localStorage.setItem("kanap", JSON.stringify(kanap));

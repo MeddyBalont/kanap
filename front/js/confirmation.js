@@ -13,4 +13,4 @@ idConfirmation.innerHTML = `<span id="orderId"><strong>${orderId}</strong><br>Me
 console.log(orderId);
 //Nettoyage du local storage :
 
-//localStorage.clear();
+localStorage.clear();

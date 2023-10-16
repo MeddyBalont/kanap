@@ -39,6 +39,8 @@ async function affichageKanap() {
         kanapItems.appendChild(kanapArcticles);
         kanapArcticles.className = "cart__item";
         kanapArcticles.setAttribute("data-id", kanap[i].id)
+        //On remplit le tableau products
+        products.push(kanap[i].id)
         kanapArcticles.setAttribute("data-color", kanap[i].color)
 
 
@@ -301,7 +303,8 @@ const contact = {
     }
 
     if (verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail()) { 
-        localStorage.setItem("contact",JSON.stringify(contact));
+        //localStorage.setItem("contact",JSON.stringify(contact));
+        
         Server();
        
     } else {
@@ -325,7 +328,7 @@ const contact = {
             orderId = server.orderId;
             if (orderId !=""){
             alert("Votre commande a bien été enregistré");
-            location.href = "confirmation.html?id=" + orderId;
+           location.href = "confirmation.html?id=" + orderId;
             }
         })
     }
