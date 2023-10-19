@@ -1,4 +1,7 @@
+
 const productId = new URLSearchParams(window.location.search).get("id");
+//console.log(productId);
+
 //Tableau de donnée des produits selectionné
 let selectedKanap = {};
 //Le produit selectionné est l'id du produit
@@ -11,6 +14,10 @@ if (productId !== null) {
             return response.json();
         })
         .then(data => {
+            //appel de la procédure 
+            //affichekanap(data);
+            //function selectionner
+
             //Affichage de l'image dans la page produit
             let kanapImgContainer = document.getElementsByClassName("item__img")[0];
             item = document.createElement("div");
@@ -49,6 +56,7 @@ if (productId !== null) {
         .catch(err => console.log("erreur :(", err));
 
     //Création des couleurs
+
     function choixCouleurs(data) {
         let kanapCouleurs = document.getElementById("colors")
         data.colors.forEach(color => {
@@ -93,12 +101,19 @@ if (productId !== null) {
                 alert("Veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
             } else {
                 selectedKanap.color = color;
+                //appel la fonction si condition ok
+
+           
+                //ajouterPanier();
+                //ici je passe les infos du kanap en parametre
                 ajouterPanier(selectedKanap);
                 
             }
 
         });
     }
+
+    //localStorage
     //Canapé et couleurs dans le paniers selon la quantité
 
   
@@ -131,18 +146,18 @@ if (productId !== null) {
                 saveKanap(get_panier);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
             }
 
-             } else {
-            console.log("Le panier est vide, on ajoute le premier canapé !");
-            let createLocalStorage = [];
-            createLocalStorage.push(articleToSave);
-            saveKanap(createLocalStorage);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
+            } else {
+                console.log("Le panier est vide, on ajoute le premier canapé !");
+                let createLocalStorage = [];
+                createLocalStorage.push(articleToSave);
+                saveKanap(createLocalStorage);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
             }
 
 
 
-    }
+        }
 
-    function saveKanap(kanap) {
+     function saveKanap(kanap) {
         localStorage.setItem("kanap", JSON.stringify(kanap));
     }
     function getKanap() {
@@ -153,4 +168,11 @@ if (productId !== null) {
             return JSON.parse(kanap);
         }
     }
+
+ 
+    //let affichekanap = (data) => {
+        //console.log(data);
+
+    //};
+
 }
