@@ -21,10 +21,8 @@ async function getData(productId) {
 //AFFICHAGE DES PRODUITS
 
 async function affichageKanap() {
-
     let totalPrix = 0;
     let totalArticle = 0;
-
     if (kanap === null || kanap.length === 0) {
         document.querySelector("h1").textContent = "Votre panier est vide";
     } else for (let i = 0; i < kanap.length; i++) {
@@ -88,17 +86,17 @@ async function affichageKanap() {
         divSetting.className = "cart__item__content__settings";
         kanapDescription.appendChild(divSetting);
 
-        //Ajout d'un "p" qui va contenir qté;
+        //Ajout d'un "p" qui va contenir qtÃ©;
         let divQuantity = document.createElement("div");
         divCartItems.className = "cart__item__content__settings__quantity";
         divSetting.appendChild(divQuantity);
 
-        //Ajout d'un "p" qui va contenir la qté
+        //Ajout d'un "p" qui va contenir la qtÃ©
         let cartQuantity = document.createElement("p");
         divQuantity.appendChild(cartQuantity);
         cartQuantity.innerText = "Qté : ";
 
-        //Input de la quantité
+        //Input de la quantitÃ©
         let inputQuantity = document.createElement("input");
         divQuantity.appendChild(inputQuantity);
         inputQuantity.value = kanap[i].quantity;
@@ -129,7 +127,7 @@ async function affichageKanap() {
         //affichages
         let totalQuantity = document.getElementById("totalQuantity");
 
-        // On affiche la quantité sur la page html:
+        // On affiche la quantitÃ© sur la page html:
         totalQuantity.innerText = totalArticle;
 
         let TotalDesPoduits = document.getElementById("totalPrice");
@@ -138,10 +136,12 @@ async function affichageKanap() {
     }
     deleteKanap();
     quantityChanged();
+    verifFirstName();
+    verifLastName();
 }
 
 
-//Fonction pour supprimer le canapé du localStorage
+
 function deleteKanap() {
     const deleteB = document.querySelectorAll(".deleteItem");
     deleteB.forEach((db) => {
@@ -165,7 +165,6 @@ function deleteKanap() {
 
 }
 
-//Fonction pour changer la quantité du canapé du localStorage
 function quantityChanged() {
     const ModifQuantite = document.querySelectorAll(".itemQuantity");
     ModifQuantite.forEach((Md) => {
@@ -210,14 +209,14 @@ const contact = {
             email: document.querySelector("#email").value,
     };
 
-    //Prénom de l'utilisateur
+    
     function verifFirstName() {
         const prenom = document.getElementById("firstName");
         if (ValidName(prenom.value)) {
             firstNameErrorMsg.classList.add("opacity")
             firstNameErrorMsg.textContent = "";
             if (prenom.value.length < 3 || prenom.value.length > 26) {
-                firstNameErrorMsg.textContent = 'Doit contenir entre 3 et 25 caractÃ¨res'
+                firstNameErrorMsg.textContent = 'Doit contenir entre 3 et 25 caractères'
                 return false;
             } else {
                 return true;
@@ -228,15 +227,14 @@ const contact = {
             return false;
         }
     }
-    //Nom de l'utilisateur
+
     function verifLastName() {
         const nom = document.getElementById("lastName");
-
         if (ValidName(nom.value)) {
             lastNameErrorMsg.classList.add("opacity")
             lastNameErrorMsg.textContent = "";
             if (nom.value.length < 3 || nom.value.length > 26) {
-                lastNameErrorMsg.textContent = 'Doit contenir entre 3 et 25 caractÃ¨res'
+                lastNameErrorMsg.textContent = 'Doit contenir entre 3 et 25 caractères'
                 return false;
             } else {
                 return true;
@@ -248,7 +246,7 @@ const contact = {
         }
     }
 
-    //Adresse de l'utilisateur
+
     function verifAdresse() {
         const adresse = document.getElementById("address");
         if (ValidLieu(adresse.value)) {
@@ -257,7 +255,7 @@ const contact = {
             return true;
         } else {
             addressErrorMsg.classList.remove("opacity");
-            addressErrorMsg.textContent = 'Adresse invalide, exemple 1 rue FranÃ§ois mansart';
+            addressErrorMsg.textContent = 'Adresse invalide, exemple 1 rue François mansart';
             return false;
         }
     }
@@ -275,7 +273,6 @@ const contact = {
         }
     }
 
-    //Email de l'utilisateur
     function verifMail() {
         const mail = document.getElementById("email");
         if (Validmail(mail.value)) {
@@ -289,20 +286,19 @@ const contact = {
         }
     }
 
-    //Regex pour confirmer le prénom et nom
     function ValidName(value) {
         return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
     }
-    //Regex pour confirmer l'adresse 
+
     function ValidLieu(value) {
         return /^([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]{1,100})?([-]{0,1})?([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]{1,100})$/.test(value)
 
     }
-    //Regex pour confirmer la ville
+
     function ValidVille(value) {
         return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value)
     }
-    //Regex pour confirmer l'e-mail
+
     function Validmail(value) {
         return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(value)
     }
