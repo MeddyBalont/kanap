@@ -12,7 +12,6 @@ const btnvalid = document.getElementById("order");
 btnvalid.addEventListener("click", (event) => {
   event.preventDefault();
  
-  // [Z] voir quoi faire avec ça
   const contact = {
     firstName: document.querySelector("#firstName").value,
     lastName: document.querySelector("#lastName").value,
@@ -21,7 +20,6 @@ btnvalid.addEventListener("click", (event) => {
     email: document.querySelector("#email").value,
   };
  
-  // SI (verifFirstName() && verifLastName() && verifAdresse() && verifVille() && verifMail() sont TOUTES true)
   if (
     !verifFirstName() &&
     !verifLastName() &&
@@ -29,12 +27,11 @@ btnvalid.addEventListener("click", (event) => {
     !verifVille() &&
     !verifMail()
   ) {
-    //localStorage.setItem("contact",JSON.stringify(contact));
  
-    Server(contact, products);
-  } else {
-    alert("Veillez bien remplir votre formulaire !");
-    return;
+      Server(contact, products);
+    } else {
+      alert("Veillez bien remplir votre formulaire !");
+      return;
   }
  
   // [Z] Pareil que le commentaire sur le fait de déclarer tes fonctions dans un eventListener
@@ -63,10 +60,8 @@ async function affichageKanap() {
   } else
     for (let i = 0; i < kanap.length; i++) {
       let item = kanap[i];
-      //console.log(kanap);
  
       const productData = await getData(item.id);
-      //console.log(productData.name);
  
       let kanapItems = document.getElementById("cart__items");
  
@@ -75,11 +70,10 @@ async function affichageKanap() {
       kanapItems.appendChild(kanapArcticles);
       kanapArcticles.className = "cart__item";
       kanapArcticles.setAttribute("data-id", kanap[i].id);
-      //On remplit le tableau products
       products.push(kanap[i].id);
       kanapArcticles.setAttribute("data-color", kanap[i].color);
  
-      //Ajout des Ã©lÃ©ments dans la div:
+      //Ajout des Elements dans la div:
       let kanapImgContainer = document.createElement("div");
       kanapImgContainer.className = "cart__item__img";
       kanapArcticles.appendChild(kanapImgContainer);
@@ -120,17 +114,17 @@ async function affichageKanap() {
       divSetting.className = "cart__item__content__settings";
       kanapDescription.appendChild(divSetting);
  
-      //Ajout d'un "p" qui va contenir qtÃ©;
+      //Ajout d'un "p" qui va contenir qté;
       let divQuantity = document.createElement("div");
       divCartItems.className = "cart__item__content__settings__quantity";
       divSetting.appendChild(divQuantity);
  
-      //Ajout d'un "p" qui va contenir la qtÃ©
+      //Ajout d'un "p" qui va contenir la qté
       let cartQuantity = document.createElement("p");
       divQuantity.appendChild(cartQuantity);
       cartQuantity.innerText = "Qté : ";
  
-      //Input de la quantitÃ©
+      //Input de la quantité
       let inputQuantity = document.createElement("input");
       divQuantity.appendChild(inputQuantity);
       inputQuantity.value = kanap[i].quantity;
@@ -141,7 +135,7 @@ async function affichageKanap() {
       inputQuantity.setAttribute("name", "itemQuantity");
       inputQuantity.setAttribute("value", kanap[i].quantity);
  
-      //crÃ©ation de la div pour supprimer
+      //création de la div pour supprimer
       let divSupprimer = document.createElement("div");
       divSupprimer.className = "cart__item__content__settings__delete";
       divSetting.appendChild(divSupprimer);
@@ -161,64 +155,67 @@ async function affichageKanap() {
       //affichages
       let totalQuantity = document.getElementById("totalQuantity");
  
-      // On affiche la quantitÃ© sur la page html:
+      // On affiche la quantité sur la page html:
       totalQuantity.innerText = totalArticle;
  
       let TotalDesPoduits = document.getElementById("totalPrice");
       TotalDesPoduits.innerText = totalPrix;
     }
+
   deleteKanap();
   quantityChanged();
+
 }
  
 function deleteKanap() {
   const deleteB = document.querySelectorAll(".deleteItem");
-  deleteB.forEach((db) => {
-    db.addEventListener("click", (event) => {
+    deleteB.forEach((db) => {
+      db.addEventListener("click", (event) => {
       event.preventDefault();
       let myArticcle = db.closest("article");
-      console.log(myArticcle);
-      console.log(myArticcle.dataset.id);
-      console.log(myArticcle.dataset.color);
+
       if (window.confirm("Voulez vous supprimer ce produit ?")) {
-        let deleteId = myArticcle.dataset._id;
-        let deleteColor = myArticcle.dataset.color;
- 
-        kanap = kanap.filter(
-          (el) => el._id !== deleteId || el.color !== deleteColor
-        );
-        console.log(kanap);
-        localStorage.setItem("kanap", JSON.stringify(kanap));
-        document.location.reload();
-      }
+          let deleteId = myArticcle.dataset._id;
+          let deleteColor = myArticcle.dataset.color;
+  
+          kanap = kanap.filter((el) => el._id !== deleteId || el.color !== deleteColor);
+        
+          localStorage.setItem("kanap", JSON.stringify(kanap));
+
+          document.location.reload();
+        }
+
     });
+
   });
+
 }
  
 function quantityChanged() {
   const ModifQuantite = document.querySelectorAll(".itemQuantity");
-  ModifQuantite.forEach((Md) => {
-    Md.addEventListener("change", (event) => {
+    ModifQuantite.forEach((Md) => {
+      Md.addEventListener("change", (event) => {
       event.preventDefault();
-      console.log(ModifQuantite);
       let myQte = Md.closest(".itemQuantity");
- 
       let myArticle = Md.closest("article");
       let kanapId = myArticle.dataset.id;
       let kanapColor = myArticle.dataset.color;
  
-      let resultFinal = kanap.find(
-        (p) => p.id == kanapId && p.color == kanapColor
-      );
+      let resultFinal = kanap.find((p) => p.id == kanapId && p.color == kanapColor);
+
       if (resultFinal) {
         if (parseInt(myQte.value) > 0) {
           resultFinal.quantity = parseInt(myQte.value);
         }
       }
+
       localStorage.setItem("kanap", JSON.stringify(kanap));
       document.location.reload();
+
     });
+
   });
+
 }
  
 function containsNumbers(str) {
@@ -227,13 +224,11 @@ function containsNumbers(str) {
  
 function verifFirstName() {
   let prenom = document.getElementById("firstName");
-  console.log(prenom.value);
-  console.log(typeof(prenom.value));
   if (!ValidName(prenom.value)) {
-    console.log(ValidName(prenom.value) + "erreur sur le prénom");
-    // rentre dans cette condition car il y a une erreur dans l'input prénom
+
     firstNameErrorMsg.style.display = "block";
     firstNameErrorMsg.textContent = "";
+
     if (prenom.value.length < 3 || prenom.value.length > 26) {
       firstNameErrorMsg.textContent = "Doit contenir entre 3 et 25 caractères";
     } else if (containsNumbers(prenom.value)){
@@ -241,20 +236,18 @@ function verifFirstName() {
     } else {
       firstNameErrorMsg.textContent = "Ne doit pas contenir de caractères spéciaux";
     }
-    // return true car il y a une erreur car
     return true;
+
   } else {
-    console.log("rentre bien dans le else verifFirstName()");
-    // return false, car pas d'erreur dans l'input prénom, on retire l'opacité et le contenu de l'erreur pour qu'elle ne s'affiche pas
     firstNameErrorMsg.style.display = "none";
     return false;
   }
+
 }
  
 function verifLastName() {
   const nom = document.getElementById("lastName");
   if (!ValidName(nom.value)) {
-    //console.log("erreur sur le nom");
  
     lastNameErrorMsg.style.display = "block";
     lastNameErrorMsg.textContent = "";
@@ -267,6 +260,7 @@ function verifLastName() {
       lastNameErrorMsg.textContent = "Ne doit pas contenir de caractères spéciaux";
     }
     return true;
+
   } else {
     lastNameErrorMsg.style.display = "none";
     return false;
@@ -278,7 +272,6 @@ function verifAdresse() {
   addressErrorMsg.textContent = "";
  
   if (!ValidLieu(adresse.value)) {
-    console.log("erreur sur l'adresse");
     addressErrorMsg.style.display = "block";
     addressErrorMsg.textContent = "Adresse invalide, exemple 1 rue François mansart";
     return true;
@@ -287,48 +280,41 @@ function verifAdresse() {
     return false;
   }
 }
+
 function verifVille() {
   const ville = document.getElementById("city");
   cityErrorMsg.textContent = "";
-  if (!ValidVille(ville.value)) {
-    //console.log("erreur sur la ville");
-    cityErrorMsg.style.display = "block";
-    cityErrorMsg.textContent = "Ne doit pas contenir de chiffres ou de caractère";
-    return true;
+    if (!ValidVille(ville.value)) {
+        cityErrorMsg.style.display = "block";
+        cityErrorMsg.textContent = "Ne doit pas contenir de chiffres ou de caractère";
+        return true;
   } else {
-    cityErrorMsg.style.display = "none";
+        cityErrorMsg.style.display = "none";
     return false;
   }
 }
  
 function verifMail() {
   const mail = document.getElementById("email");
-  emailErrorMsg.textContent = "";
-  if (!Validmail(mail.value)) {
-    console.log("erreur sur le mail");
-    emailErrorMsg.style.display = "block";
-    emailErrorMsg.textContent = "email invalide";
-    return true;
+    emailErrorMsg.textContent = "";
+    if (!Validmail(mail.value)) {
+        console.log("erreur sur le mail");
+        emailErrorMsg.style.display = "block";
+        emailErrorMsg.textContent = "email invalide";
+         return true;
   } else {
-    console.log("pas d'erreur sur le mail");
-    emailErrorMsg.style.display = "none";
-    return false;
+        console.log("pas d'erreur sur le mail");
+         emailErrorMsg.style.display = "none";
+        return false;
   }
 }
  
 // SI il y a une erreur, cette fonction renverra true, sinon false
 function ValidName(value) {
-  //console.log("validName = " + /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value));
   return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value);
 }
  
 // SI il y a une erreur, cette fonction renverra true, sinon false
-/*function ValidLieu(value) {
-  return /^([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]{1,100})?([-]{0,1})?([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]{1,100})$/.test(
-    value
-  );
-}*/
-
 function ValidLieu(value) {
   return /^([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]*-?[A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]*)$/.test(value);
 }
