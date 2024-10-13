@@ -1,156 +1,243 @@
-const productId = new URLSearchParams(window.location.search).get("id");
-//Tableau de donnée des produits selectionné
-let selectedKanap = {};
-//Le produit selectionné est l'id du produit
-selectedKanap._id = productId;
-//console.log(selectedKanap);
-//Je récupère le contenu de mon back avec l'ID de kanap via un url
-if (productId !== null) {
-    fetch(`http://localhost:3000/api/products/${productId}`)
-        .then((response) => {
-            return response.json();
-        })
-        .then(data => {
-            //Affichage de l'image dans la page produit
-            let kanapImgContainer = document.getElementsByClassName("item__img")[0];
-            item = document.createElement("div");
-            item.setAttribute("class", "item__img");
-            let kanapImg = document.createElement("img");
-            kanapImg.setAttribute("src", data.imageUrl)
-            kanapImgContainer.appendChild(kanapImg);
 
-            //Affichage du nom du produit
-            let item1 = document.createElement("h1")
-            item1.setAttribute("id", "title");
-            item1.innerText = data.name
-            let kanapTitle = document.getElementById("title")
-            kanapTitle.parentNode.replaceChild(item1, kanapTitle);
+//Commentaire index.html :
 
-            //Affichage du prix
-            let item2 = document.getElementById("price");
-            item2.setAttribute("id", "price");
-            item2.innerText = data.price
+/*<img src="../images/logo.png" alt="Photographie d'un canapé">*/
+/* Nom du produit*/
+/*42*/
+/*Dis enim malesuada risus sapien gravida nulla nisl arcu.*/
+/*<option value="vert">vert</option>
+<option value="blanc">blanc</option>*/
 
-            //Affichage du produit
-            let item3 = document.createElement("p");
-            item3.setAttribute("id", "description");
-            item3.innerText = data.description
-            let kanapDescription = document.getElementById("description");
-            kanapDescription.appendChild(item3);
-            //console.log(kanapImg);
+
+//Commentaire Produit n°1 Description :
+
+/*  {
+    "colors": [
+      "Blue",
+      "White",
+      "Black"
+    ],
+    
+    "_id": "107fb5b75607497b96722bda5b504926",
+    "name": "Kanap Sinopé",
+    "price": 1849,
+    "imageUrl": "http://localhost:3000/images/kanap01.jpeg",
+    "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "altTxt": "Photo d'un canapé bleu, deux places"
+  }, 
+  
+*/
 
 
 
-            choixCouleurs(data);
-            SelectionnerQuantity(data);
-            //console.log(data);
-        })
+// URLSearchParams : 
+let url = new URLSearchParams(document.location.search);
+let id = url.get("id");
 
-        .catch(err => console.log("erreur :(", err));
 
-    //Création des couleurs
-    function choixCouleurs(data) {
-        let kanapCouleurs = document.getElementById("colors")
-        data.colors.forEach(color => {
-            let showCouleurs = document.createElement("option");
-            showCouleurs.value = color;
-            showCouleurs.innerText = color;
-            kanapCouleurs.appendChild(showCouleurs);
+//Fonction Fetch :
+fetch('https://kanap-bd.vercel.app/api/products/' + id)
+  .then( (response) => response.json())
+  .then( (dataProducts) => scriptDataProducts (dataProducts));
 
-        });
+
+
+  function scriptDataProducts (Kanap) {
+
+    //Création d'une constante imageUrl, qui vas récupérer l'imageUrl des images :
+    const imageUrl = Kanap.imageUrl;
+
+    //Création d'une constante altTxt, qui vas récupérer le altTxt des images :
+    const altTxt = Kanap.altTxt;
+
+    //Création d'une constante name, qui vas récupérer le name des images :
+    const name = Kanap.name;
+
+    //Création d'une constante price, qui vas récupérer le price des images :
+    const price = Kanap.price;
+
+    //Création d'une constante description, qui vas récupérer la description des images :
+    const description = Kanap.description;
+
+    //Création d'une constante colors, qui vas récupérer la colors des images :
+    const colors = Kanap.colors;
+
+
+    
+    
+    //Création d'une constante image, qui vas appelé la fonction makeImageUrl et affectation de imageUrl, altTxt en paramétre:
+    const image = makeImageUrl(imageUrl, altTxt);
+
+    //Création d'une constante h1, qui vas appelé la fonction makeName et affectaton du name en paramétre :
+    const h1 = makeName(name);
+
+    //Création d'une constante prix, qui vas appelé la fonction makePrice et affectaton du price en paramétre :
+    const prix = makePrice(price);    
+
+    //Création d'une constante p, qui vas appelé la fonction makeDescription et affectaton de la description en paramétre :
+    const p = makeDescription(description);
+
+    //Création d'une constante select, qui vas appelé la fonction makeColors et affectaton de la colors en paramétre :
+    const select = makeColors(colors);
+
+    
+    
+
+  function makeImageUrl (imageUrl, altTxt) {
+    //Creation de la balise "<img>" avec insertion du imageUrl et du altTxt :
+    let img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = altTxt;
+    let parent = document.querySelector('.item__img');
+    parent.append(img);
+      
+  }
+
+
+
+  function makeName (name) {
+    //Selection id = #title et affectation du name :
+      let h1 = document.querySelector('#title');
+      h1.textContent = name; 
     }
-    //Choix de quantité dynamique
-    function SelectionnerQuantity() {
-        let selectionQuantity = document.querySelector('input[type="number"]');
-        //On regarde se qu'il se passe dans l'input
-        selectionQuantity.addEventListener("input", (e) => {
-            //console.log(selectionQuantity)
-            //on récupère la valeur de la cible de l'évènement dans input:
-            let quantityProduct = e.target.value;
+  
+  
+  
+  
+  function makePrice (price) {
+    //Selection de l'id = #price et affectation du price:
+    let span = document.querySelector('#price');
+    span.textContent = price;
+  }
+  
+  
+  
 
-            //On ajoute la quantité à l'objet quantityProduct:
-            selectedKanap.quantity = quantityProduct;
-            //console.log(quantityProduct);
-        });
-
-        //Conditions de validation au clic via le bouton ajouter  au panier
-        let orderButton = document.getElementById("addToCart");
-        //On regarde ce qu'il se passe sur le bouton #addToCart pour faire l'action:
-        orderButton.addEventListener("click", () => {
-            //conditions
-            console.log("click")
-            let color = document.getElementById("colors").value;
-            //console.log(color);
-            if (
-                //valeur créées dynamiquement 
-                
-                selectedKanap.quantity < 1 ||
-                selectedKanap.quantity > 100 ||
-                selectedKanap.quantity === undefined ||
-                color === "" ||
-                color === undefined
-            ) {
-                alert("Veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
-            } else {
-                selectedKanap.color = color;
-                ajouterPanier(selectedKanap);
-                
-            }
-
-        });
-    }
-    //Canapé et couleurs dans le paniers selon la quantité
+  function makeDescription (description) {
+    //Selection l'id = #description et affectation de la description :
+    let p = document.querySelector('#description');
+    p.textContent = description;
+  }
+  
 
   
-    function ajouterPanier(monKanap) {
-
-        //ici, on stoque le canapé courrant dans un objet
-        let articleToSave = {
-            id: monKanap._id,
-            color: monKanap.color,
-            quantity: parseInt(monKanap.quantity, 10),
-        };
-
-        //ici tu dois controler l'existance de ton panier
-        let get_panier = getKanap();
-
-        if (get_panier) { //si le panier existe
-            //Ici verifier si le produit est deja dans le panier //id + couleur
-
-            let IdentityKanap = get_panier.find((objet) => objet.id == articleToSave.id && objet.color == articleToSave.color);
-            if (IdentityKanap) {
-                console.log('trouvé')
-                //Convertir les valeurs en numérique (parseInt) 
-                    IdentityKanap.quantity = parseInt(monKanap.quantity);
-                    console.log(IdentityKanap);
-                    saveKanap(get_panier);
-
-            } else {
-                console.log("Le panier ne contient pas le canapé en cours !");
-                get_panier.push(articleToSave);
-                saveKanap(get_panier);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
-            }
-
-             } else {
-            console.log("Le panier est vide, on ajoute le premier canapé !");
-            let createLocalStorage = [];
-            createLocalStorage.push(articleToSave);
-            saveKanap(createLocalStorage);  //localStorage.setItem("cart", JSON.stringify(createLocalStorage));
-            }
-
-
-
+  function makeColors (colors) {
+    //Selection l'id = #colors et creation d'une boucle for pour les colors :
+    let select = document.querySelector('#colors');
+    
+    for (let i = 0; i < colors.length ; i++) {
+      let option = document.createElement('option');
+        option.value = colors[i];
+        option.textContent = colors[i];
+        select.append(option);
     }
+    
+    
+    // Selection de l'id du button et appel de la function addEventListener qui écoute l'évènement click sur le bouton ajouter :
+    
+    const button = document.querySelector("#addToCart");
+    button.addEventListener('click', ajouterAuxPanier);
 
-    function saveKanap(kanap) {
-        localStorage.setItem("kanap", JSON.stringify(kanap));
-    }
-    function getKanap() {
-        let kanap = localStorage.getItem("kanap");
-        if (kanap == null) {
-            return [];
-        } else {
-            return JSON.parse(kanap);
+    function ajouterAuxPanier(e) {
+      
+      e.preventDefault();
+      
+      //Selection des id = #colors et #quantity :
+      let colors = document.querySelector('#colors').value;
+      let quantity = document.querySelector('#quantity').value;
+      
+      
+      //SI la colors ne vaut rien, veuillez choisir une couleur :
+      if(colors == ''){
+            alert('⚠️Veuillez sélectionner une couleur⚠️');
+            return;
         }
+
+        //SI NON SI la quantity est inférieur à 1 veuillez choisir une quantités valide : 
+        else if (quantity<1){
+            alert('⚠️Veuillez sélectionner le nombre d\'articles souhaités⚠️');
+            return;
+        }
+
+        
+        //SI NON SI la quantity est supérieur à 100 veuillez choisir une quantités entre 1 à 100 produits : 
+        else if (quantity>100){
+          alert('⚠️Vous pouvez seulement sélectionner 1 à 100 produits.⚠️');
+          return;
+        }
+        
+        
+        //SI NON votre commande a bien ete enregistrée :
+        else{
+          alert('✅ Votre article ' + name + ' a bien été ajouté au panier ✅');   
+        }
+        
+        
+        // Enregistrement des valeurs dans un objet optionProduct :
+        const optionProduct = { 
+          id: id,
+          colors: colors,
+          quantity: Number(quantity),
+        }
+
+        
+        //LE LOCALE STORAGE :
+        
+        //Déclaration de la variable "localStorageProducts" dans laquelles on met les key et les values qui sont dans le local stockage :
+        let localStorageProducts = JSON.parse(localStorage.getItem("produits"));
+        
+        
+        //Popup confirmation :
+        const popupConfirmation = () => {
+        
+          //SI OUI alors redirection vers = cart.html :
+        if (confirm("L'article " + name + " à bien été ajouté au panier 🛒, consultez le panier 🆗 ou revenir à la page d'accueil ❌")) {
+          window.location.href = "cart.html";
+        }
+        
+        //SI NON alors redirection vers = index.html :
+        else{
+          window.location.href = "index.html";
+        }
+      }
+      
+      
+      // Si il y a deja des produit dans le locale storage :
+      if (localStorageProducts) {
+        
+        // On rechercher avec la méthode find() si l'id et la couleur d'un article est déjà présent :
+        let item = localStorageProducts.find(
+          (item) =>
+          item.id == optionProduct.id && item.colors == optionProduct.colors
+        );
+          
+          
+          
+          // Si oui on additionne les quantity des articles de même id et colors et mise à jour du localstorageProducts :
+          if (item) {
+            item.quantity = item.quantity + optionProduct.quantity;
+            localStorage.setItem("produits", JSON.stringify(localStorageProducts));
+            popupConfirmation();
+            return;
+        }
+
+        
+        // Si l'article n'est pas déjà dans le local storage alors on push le nouvel article sélectionner :
+        localStorageProducts.push(optionProduct);
+        localStorage.setItem("produits", JSON.stringify(localStorageProducts));
+        popupConfirmation();
+      } 
+      
+      else {
+        //  S'il n'y a pas de produits dans le locale stockage alors création d'un tableau dans le lequel on push l'objet "optionProduct";
+        let newTabLocalStorage = [];
+        newTabLocalStorage.push(optionProduct);
+        localStorage.setItem("produits", JSON.stringify(newTabLocalStorage));
+        popupConfirmation();
+      }
     }
+  }
 }
+    
+    
+

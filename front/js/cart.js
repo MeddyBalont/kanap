@@ -1,350 +1,438 @@
-let kanap = JSON.parse(localStorage.getItem("kanap"));
-console.log("kanap");
-let products = [];
- 
-affichageKanap();
- 
-/*--------------------------------------
-         FORMULAIRE
---------------------------------------*/
-const btnvalid = document.getElementById("order");
- 
-btnvalid.addEventListener("click", (event) => {
-  event.preventDefault();
- 
-  const contact = {
-    firstName: document.querySelector("#firstName").value,
-    lastName: document.querySelector("#lastName").value,
-    address: document.querySelector("#address").value,
-    city: document.querySelector("#city").value,
-    email: document.querySelector("#email").value,
-  };
- 
-  if (
-    !verifFirstName() &&
-    !verifLastName() &&
-    !verifAdresse() &&
-    !verifVille() &&
-    !verifMail()
-  ) {
- 
-      Server(contact, products);
-    } else {
-      alert("Veillez bien remplir votre formulaire !");
-      return;
-  }
- 
-  // [Z] Pareil que le commentaire sur le fait de déclarer tes fonctions dans un eventListener
-});
- 
- 
-// fonctions
- 
-async function getData(productId) {
-  return fetch(`http://localhost:3000/api/products/${productId}`)
-    .then((response) => {
-      return response.json();
-    })
- 
-    .catch((error) => {
-      error = "erreur ";
-      alert(error);
-    });
-}
- 
-async function affichageKanap() {
-  let totalPrix = 0;
-  let totalArticle = 0;
-  if (kanap === null || kanap.length === 0) {
-    document.querySelector("h1").textContent = "Votre panier est vide";
-  } else
-    for (let i = 0; i < kanap.length; i++) {
-      let item = kanap[i];
- 
-      const productData = await getData(item.id);
- 
-      let kanapItems = document.getElementById("cart__items");
- 
-      //ajout de l'article:
-      let kanapArcticles = document.createElement("article");
-      kanapItems.appendChild(kanapArcticles);
-      kanapArcticles.className = "cart__item";
-      kanapArcticles.setAttribute("data-id", kanap[i].id);
-      products.push(kanap[i].id);
-      kanapArcticles.setAttribute("data-color", kanap[i].color);
- 
-      //Ajout des Elements dans la div:
-      let kanapImgContainer = document.createElement("div");
-      kanapImgContainer.className = "cart__item__img";
-      kanapArcticles.appendChild(kanapImgContainer);
- 
-      //Ajout de l'image:
-      let kanapImg = document.createElement("img");
-      kanapImg.src = productData.imageUrl;
-      kanapImg.aslt = productData.alt;
-      kanapImgContainer.appendChild(kanapImg);
- 
-      //Ajout de la div en lien "article"
-      let divCartItems = document.createElement("div");
-      divCartItems.className = "cart__item__content";
-      kanapArcticles.appendChild(divCartItems);
- 
-      //Ajout de la div lien avec le nom, couleur et prix du produit:
-      let kanapDescription = document.createElement("div");
-      kanapDescription.className = "cart__item__content__description";
-      divCartItems.appendChild(kanapDescription);
- 
-      //Ajout du "h2" nom du produit:
-      let kanapName = document.createElement("h2");
-      kanapDescription.appendChild(kanapName);
-      kanapName.innerText = productData.name;
- 
-      //Ajout d'un "p" pour la coleur du produit:
-      let kanapColor = document.createElement("p");
-      kanapDescription.appendChild(kanapColor);
-      kanapColor.innerText = kanap[i].color;
- 
-      //Ajout d'un "p" pour le prix du produit:
-      let KanapPrice = document.createElement("p");
-      kanapDescription.appendChild(KanapPrice);
-      KanapPrice.innerText = `${productData.price} €`;
- 
-      //Ajout d'un div lien
-      let divSetting = document.createElement("div");
-      divSetting.className = "cart__item__content__settings";
-      kanapDescription.appendChild(divSetting);
- 
-      //Ajout d'un "p" qui va contenir qté;
-      let divQuantity = document.createElement("div");
-      divCartItems.className = "cart__item__content__settings__quantity";
-      divSetting.appendChild(divQuantity);
- 
-      //Ajout d'un "p" qui va contenir la qté
-      let cartQuantity = document.createElement("p");
-      divQuantity.appendChild(cartQuantity);
-      cartQuantity.innerText = "Qté : ";
- 
-      //Input de la quantité
-      let inputQuantity = document.createElement("input");
-      divQuantity.appendChild(inputQuantity);
-      inputQuantity.value = kanap[i].quantity;
-      inputQuantity.className = "itemQuantity";
-      inputQuantity.setAttribute("type", "number");
-      inputQuantity.setAttribute("min", "1");
-      inputQuantity.setAttribute("max", "100");
-      inputQuantity.setAttribute("name", "itemQuantity");
-      inputQuantity.setAttribute("value", kanap[i].quantity);
- 
-      //création de la div pour supprimer
-      let divSupprimer = document.createElement("div");
-      divSupprimer.className = "cart__item__content__settings__delete";
-      divSetting.appendChild(divSupprimer);
- 
-      //Ajout d'un "p" pour le bouton supprimer
-      let SuppItem = document.createElement("p");
-      SuppItem.className = "deleteItem";
-      divSupprimer.appendChild(SuppItem);
-      SuppItem.innerText = "Supprimer";
- 
-      //Total articles
-      totalArticle += parseInt(item.quantity);
- 
-      //Total prix
-      totalPrix += parseInt(item.quantity) * productData.price;
- 
-      //affichages
-      let totalQuantity = document.getElementById("totalQuantity");
- 
-      // On affiche la quantité sur la page html:
-      totalQuantity.innerText = totalArticle;
- 
-      let TotalDesPoduits = document.getElementById("totalPrice");
-      TotalDesPoduits.innerText = totalPrix;
-    }
 
-  deleteKanap();
-  quantityChanged();
+//Commentaire index.html :
 
-}
- 
-function deleteKanap() {
-  const deleteB = document.querySelectorAll(".deleteItem");
-    deleteB.forEach((db) => {
-      db.addEventListener("click", (event) => {
-      event.preventDefault();
-      let myArticcle = db.closest("article");
 
-      if (window.confirm("Voulez vous supprimer ce produit ?")) {
-          let deleteId = myArticcle.dataset._id;
-          let deleteColor = myArticcle.dataset.color;
+/* 
+<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+    <div class="cart__item__img">
+        <img src="../images/product01.jpg" alt="Photographie d'un canapé">
+    </div>
+
+
+    <div class="cart__item__content">
+        <div class="cart__item__content__description">
+            <h2>Nom du produit</h2>
+            <p>Vert</p>
+            <p>42,00 €</p>
+        </div>
+
+
+       
+       
+        <div class="cart__item__content__settings">
+            <div class="cart__item__content__settings__quantity">
+                <p>Qté : </p>
+                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+            </div>
+
+
+
+            <div class="cart__item__content__settings__delete">
+                <p class="deleteItem">Supprimer</p>
+            </div>
+        </div>
+    </div>
+</article>
+    2       84,00
+    ci est un message d'erreur
+*/
+
+
+//Commentaire Produit n°1 Description :
+
+/* {
+    "colors": [
+      "Blue",
+      "White",
+      "Black"
+    ],
+    
+    "_id": "107fb5b75607497b96722bda5b504926",
+    "name": "Kanap Sinopé",
+    "price": 1849,
+    "imageUrl": "http://localhost:3000/images/kanap01.jpeg",
+    "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "altTxt": "Photo d'un canapé bleu, deux places"
+  }, 
   
-          kanap = kanap.filter((el) => el._id !== deleteId || el.color !== deleteColor);
+*/
+
+
+
+//LE LOCALE STORAGE :
         
-          localStorage.setItem("kanap", JSON.stringify(kanap));
+//Déclaration de la variable "localStorageProducts" dans laquelles on met les key et les values qui sont dans le local stockage :
+let localStorageProducts = JSON.parse(localStorage.getItem("produits"));    
 
-          document.location.reload();
-        }
 
-    });
+// Variable pour stocker les id de chaque articles présents dans le panier :
+    let products = [];
 
-  });
 
-}
- 
-function quantityChanged() {
-  const ModifQuantite = document.querySelectorAll(".itemQuantity");
-    ModifQuantite.forEach((Md) => {
-      Md.addEventListener("change", (event) => {
-      event.preventDefault();
-      let myQte = Md.closest(".itemQuantity");
-      let myArticle = Md.closest("article");
-      let kanapId = myArticle.dataset.id;
-      let kanapColor = myArticle.dataset.color;
- 
-      let resultFinal = kanap.find((p) => p.id == kanapId && p.color == kanapColor);
-
-      if (resultFinal) {
-        if (parseInt(myQte.value) > 0) {
-          resultFinal.quantity = parseInt(myQte.value);
-        }
-      }
-
-      localStorage.setItem("kanap", JSON.stringify(kanap));
-      document.location.reload();
-
-    });
-
-  });
-
-}
- 
-function containsNumbers(str) {
-  return /[0-9]/.test(str);
-}
- 
-function verifFirstName() {
-  let prenom = document.getElementById("firstName");
-  if (!ValidName(prenom.value)) {
-
-    firstNameErrorMsg.style.display = "block";
-    firstNameErrorMsg.textContent = "";
-
-    if (prenom.value.length < 3 || prenom.value.length > 26) {
-      firstNameErrorMsg.textContent = "Doit contenir entre 3 et 25 caractères";
-    } else if (containsNumbers(prenom.value)){
-      firstNameErrorMsg.textContent = "Ne doit pas contenir de chiffre";
-    } else {
-      firstNameErrorMsg.textContent = "Ne doit pas contenir de caractères spéciaux";
+    // Condition de vérification si le panier existe et ou est vide et modification texte :
+    if (localStorageProducts == null || localStorageProducts.length == 0) {
+        document.querySelector('h1').textContent = '🛒 Le panier est vide 🛒 !';
+        document.querySelector('.cart__price').innerHTML = `<p>Total (<span id="totalQuantity">0</span> articles) : <span id="totalPrice">0</span> €</p>`;
     }
-    return true;
+    
+    else{
+        document.querySelector('h1').textContent = '🛒 Voici votre panier 🛒 ';
+    };
+    
 
-  } else {
-    firstNameErrorMsg.style.display = "none";
-    return false;
-  }
+    // Création d'une boucle for of dans laquelle ont injecte notre code grâce à un innerHTML et affichage des données :
+    
+    let i = 0;
+    
+    for (product of localStorageProducts) {
+        //requête Fetch : 
+        fetch('https://kanap-bd.vercel.app/api/products/' + product.id)
+        .then( (response) => response.json())
+        .then( (data) => {
 
-}
- 
-function verifLastName() {
-  const nom = document.getElementById("lastName");
-  if (!ValidName(nom.value)) {
- 
-    lastNameErrorMsg.style.display = "block";
-    lastNameErrorMsg.textContent = "";
- 
-    if (nom.value.length < 3 || nom.value.length > 26) {
-      lastNameErrorMsg.textContent = "Doit contenir entre 3 et 25 caractères";
-    } else if (containsNumbers(nom.value)) {
-      lastNameErrorMsg.textContent = "Ne doit pas contenir de chiffre";
-    } else {
-      lastNameErrorMsg.textContent = "Ne doit pas contenir de caractères spéciaux";
-    }
-    return true;
+            //Création du tableau pour les produits à envoyer au serveur
+            products.push(product.id);
 
-  } else {
-    lastNameErrorMsg.style.display = "none";
-    return false;
-  }
-}
- 
-function verifAdresse() {
-  const adresse = document.getElementById("address");
-  addressErrorMsg.textContent = "";
- 
-  if (!ValidLieu(adresse.value)) {
-    addressErrorMsg.style.display = "block";
-    addressErrorMsg.textContent = "Adresse invalide, exemple 1 rue François mansart";
-    return true;
-  } else {
-    addressErrorMsg.style.display = "none";
-    return false;
-  }
-}
 
-function verifVille() {
-  const ville = document.getElementById("city");
-  cityErrorMsg.textContent = "";
-    if (!ValidVille(ville.value)) {
-        cityErrorMsg.style.display = "block";
-        cityErrorMsg.textContent = "Ne doit pas contenir de chiffres ou de caractère";
-        return true;
-  } else {
-        cityErrorMsg.style.display = "none";
-    return false;
-  }
-}
- 
-function verifMail() {
-  const mail = document.getElementById("email");
-    emailErrorMsg.textContent = "";
-    if (!Validmail(mail.value)) {
-        console.log("erreur sur le mail");
-        emailErrorMsg.style.display = "block";
-        emailErrorMsg.textContent = "email invalide";
-         return true;
-  } else {
-        console.log("pas d'erreur sur le mail");
-         emailErrorMsg.style.display = "none";
-        return false;
-  }
-}
- 
-// SI il y a une erreur, cette fonction renverra true, sinon false
-function ValidName(value) {
-  return /^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(value);
-}
- 
-// SI il y a une erreur, cette fonction renverra true, sinon false
-function ValidLieu(value) {
-  return /^([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]*-?[A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]*)$/.test(value);
-}
- 
-// SI il y a une erreur, cette fonction renverra true, sinon false
-function ValidVille(value) {
-  return /^[A-Za-zÀ-ÖØ-öø-ÿ\- ']+$/.test(value);
-}
- 
-// SI il y a une erreur, cette fonction renverra true, sinon false
-function Validmail(value) {
-  return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(value);
-}
- 
-function Server(contact, products) {
-  fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    body: JSON.stringify({ contact, products }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      return response.json();
-    })
-    .then((server) => {
-      orderId = server.orderId;
-      if (orderId != "") {
-        alert("Votre commande a bien été enregistré");
-        location.href = "confirmation.html?id=" + orderId;
-      }
+            localStorageProducts[i].imageUrl = data.imageUrl;
+            localStorageProducts[i].altTxt = data.altTxt;
+            localStorageProducts[i].name = data.name;
+            localStorageProducts[i].price = data.price;
+
+
+            document.querySelector('#cart__items').innerHTML += `<article class="cart__item" data-id= ${localStorageProducts[i].id}  data-color= ${localStorageProducts[i].colors}>
+            <div class="cart__item__img">
+                <img src=${localStorageProducts[i].imageUrl} alt=${localStorageProducts[i].altTxt}>
+            </div>
+            <div class="cart__item__content">
+                <div class="cart__item__content__description">
+                    <h2>${localStorageProducts[i].name}</h2>
+                    <p>Couleur du produit : ${localStorageProducts[i].colors}</p>
+                    <p>Prix unitaire : ${localStorageProducts[i].price} €</p>
+                </div>
+                <div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                        <p> Qté : ${localStorageProducts[i].quantity} </p>
+                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${localStorageProducts[i].quantity}>
+                    </div>
+                    <div class="cart__item__content__settings__delete">
+                        <p class="deleteItem">Supprimer</p>
+                    </div>
+                </div>
+            </div>
+        </article>`;
+
+        TotalPriceQuantity();
+        deleteProduct();
+        modifValue();
+
+        i++;
+
     });
+    
 }
+
+
+//Déclaration d'une const avec une fonction TotalPriceQuantity qui vas afficher la quantity et le price total des produits :
+const TotalPriceQuantity = () => {
+        
+    // quantityTotalCalcul qui contient la quantity de chaque articles qui est dans le local storage :
+    var quantityTotalCalcul = 0;
+
+    // priceTotalCalcul qui contient la price de chaque articles qui est dans le local storage :
+    var priceTotalCalcul = 0;  
+
+    for (let i = 0; i < localStorageProducts.length; i++) {
+
+        //Déclaration de la variable quantityProduitDansLePanier dans laquelle ont vas chercher la quantity de tout les articles et que l'on met dans quantityTotalCalcul :
+        let quantityProduitDansLePanier = localStorageProducts[i].quantity;
+        quantityTotalCalcul += parseInt(quantityProduitDansLePanier);
+
+        //Déclaration de la variable priceProduitDansLePanier dans laquelle ont vas chercher le price de chaque articles et que l'on met dans priceTotalCalcul :
+        let priceProduitDansLePanier = localStorageProducts[i].price * localStorageProducts[i].quantity;
+        priceTotalCalcul += priceProduitDansLePanier;
+        
+    }
+    
+    //Affichage des résultat grâce à innerHtml : 
+    document.querySelector('.cart__price').innerHTML = `<p>Total (<span id="totalQuantity">${quantityTotalCalcul}</span> articles) : <span id="totalPrice">${priceTotalCalcul}</span> €</p>`;
+}
+
+
+
+
+//Création function  modifValue qui va changer la quantity des articles :
+function modifValue () {
+
+let inputQuantity = Array.from(document.querySelectorAll(".cart__item__content__settings__quantity input"));
+let valueQuantity = Array.from(document.querySelectorAll('.itemQuantity'));
+
+
+//Boucle for en vas chercher tout les input dans lequelle on effectue un addEventListener pour changer la value des articles :
+    for (let i = 0; i < inputQuantity.length; i++) {
+
+        inputQuantity[i].addEventListener("change", () => {
+        
+        // Copie du tableau localStorageProducts dans le tableau tabUpdate :
+        tabUpdate = localStorageProducts;
+            
+        //Création d'une boucle for pour supprimer dans le local storage les valeur altxt, imageUrl, name et price : 
+        for (let i = 0; i < tabUpdate.length; i++) { 
+        
+                delete tabUpdate[i].altTxt;
+                delete tabUpdate[i].imageUrl;
+                delete tabUpdate[i].name;
+                delete tabUpdate[i].price; 
+        }
+            
+        //On modifie la quantité d'un élément à chaque index [i] du tableau écouté :
+            tabUpdate[i].quantity = valueQuantity[i].value;
+
+        //Mise à jour du local storage :
+            localStorage.setItem("produits", JSON.stringify(tabUpdate));
+
+        //Rafraîchissement de la page :
+            window.location.reload();
+
+            TotalPriceQuantity();
+        });
+    }
+}
+
+
+
+
+
+/******************************** SUPPRESSION DES ARTICLES****************************/
+
+
+
+
+// Fonction de suppression des articles :
+function deleteProduct() {
+
+// Récupération boutons supprimer et transformation en tableau avec Array.from :
+let btn_supprimer = Array.from(document.querySelectorAll(".deleteItem"));
+
+// Nouveau tableau pour récupérer le tableau localStorageProducts existant et contrôler les suppression :
+let tabDelete = [];
+  for (let i = 0; i < btn_supprimer.length; i++) {
+
+    // Écoute d'évènements au click sur le tableau des boutons supprimer
+    btn_supprimer[i].addEventListener("click", () => {
+
+      // Suppression de l'article visuellement sur la page
+      btn_supprimer[i].style.display = "none";
+
+      // Copie du tableau localStorageProducts dans le tableau tabControlDelete
+      tabDelete = localStorageProducts;
+
+    
+    //Création d'une boucle for pour supprimer dans le local storage les valeur altxt, imageUrl, name et price l'orsque que l'ont supprime un article : 
+
+      for (let i = 0; i < tabDelete.length; i++) { 
+        
+        delete tabDelete[i].altTxt;
+        delete tabDelete[i].imageUrl;
+        delete tabDelete[i].name;
+        delete tabDelete[i].price;
+         
+    }
+
+      
+      // Array.prototype.splice() supprime un élément à chaque index [i] du tableau écouté
+      tabDelete.splice([i], 1);
+      
+      // Mise à jour du local storage
+      localStorageProducts = localStorage.setItem("produits", JSON.stringify(tabDelete));
+      
+
+      // Rafraîchissement de la page
+      window.location.reload();
+
+      
+    });
+  }
+}
+
+
+
+/*************************************  LE FORMULAIRE ********************************/
+
+
+//Sélection du bouton commander :
+let btnSendForm = document.querySelector('#order');
+
+
+//Écoute du bouton commander sur le click pour pouvoir contrôler, valider et ennoyer le formulaire et les produits au back-end :
+btnSendForm.addEventListener('click', (e) => {
+e.preventDefault();
+
+
+//Récupération des valeur du formulaire :
+const contact = {
+    firstName : document.querySelector("#firstName").value,
+    lastName : document.querySelector("#lastName").value,
+    address : document.querySelector("#address").value,
+    city : document.querySelector("#city").value,
+    email : document.querySelector("#email").value,
+    
+};
+    
+
+/******************************** GESTION DU FORMULAIRE ****************************/
+    
+
+    function firstNameControle () {     
+        //Regex pour le contrôle des champs Prénom :
+        const firstName = contact.firstName;  
+        let inputFirstName = document.querySelector("#firstName");
+        if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(firstName)) {
+            inputFirstName.style.border = "solid 2px green";
+            document.querySelector("#firstNameErrorMsg").textContent = "";
+            return true;
+        } 
+        
+        else {
+            inputFirstName.style.border = "solid 2px red";
+            document.querySelector("#firstNameErrorMsg").textContent = "Champ Prénom de formulaire invalide, ex: Bernard";
+            return false;
+        }
+        
+    }
+    
+
+
+    function lastNameControle () {     
+        //Regex pour le contrôle des champs Nom :
+        const lastName = contact.lastName; 
+        let inputLastName = document.querySelector("#lastName"); 
+        if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(lastName)) {
+            inputLastName.style.border = "solid 2px green";
+            document.querySelector("#lastNameErrorMsg").textContent = "";
+            return true;
+        } 
+                
+        else {
+            inputLastName.style.border = "solid 2px red";
+            document.querySelector("#lastNameErrorMsg").textContent = "Champ Nom de formulaire invalide, ex: Durand";
+            return false;
+        }
+            
+    }
+
+
+
+    function addressControl () {     
+        // Regex pour le contrôle des champs adresse :
+        const adresse = contact.address;  
+        let inputAddress = document.querySelector("#address");
+        if (/^([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]{1,100})?([-]{0,1})?([A-Za-zÀ-ÖØ-öø-ÿ0-9\séè]{1,100})$/.test(adresse)) {
+            inputAddress.style.border = "solid 2px green";
+            document.querySelector("#addressErrorMsg").textContent = "";
+            return true;
+        } 
+        
+        else {
+            inputAddress.style.border = "solid 2px red";
+            document.querySelector("#addressErrorMsg").textContent = "Champ Adresse de formulaire invalide, ex: 50 rue de la paix";
+            return false;
+        }
+        
+    }
+
+
+
+    
+    function cityControl () {     
+        //Regex pour le contrôle des champs Ville :
+        const city = contact.city;  
+        let inputCity = document.querySelector("#city");
+        if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(city)) {
+            inputCity.style.border = "solid 2px green";
+            document.querySelector("#cityErrorMsg").textContent = "";
+            return true;
+        } 
+        
+        else {
+            inputCity.style.border = "solid 2px red";
+            document.querySelector("#cityErrorMsg").textContent = "Champ Ville de formulaire invalide, ex: Bordeaux";
+            return false;
+        }
+        
+    }
+
+
+
+
+    function emailControle () {     
+        //Regex pour le contrôle des champs Email :
+        const email = contact.email;  
+        let inputMail = document.querySelector("#email");
+        if (/^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/.test(email)) {
+            inputMail.style.border = "solid 2px green";
+            document.querySelector("#emailErrorMsg").textContent = "";
+            return true;
+        } 
+        
+        else {
+            inputMail.style.border = "solid 2px red";
+            document.querySelector("#emailErrorMsg").textContent = "Champ Email de formulaire invalide, ex: example@contact.fr";
+            return false;
+        }
+        
+    }
+
+
+
+
+    //Contrôle validité formulaire avant envoie dans le locale storage : 
+    if (firstNameControle() && lastNameControle() && addressControl() && cityControl() && emailControle()) {
+    //Mettre l'objet "contact" dans le local storage :
+        localStorage.setItem("contact", JSON.stringify(contact));
+        sendFromToServer();
+    } 
+    
+    else {
+        alert("❌ Veillez bien remplir le formulaire ❌")
+    }
+    
+    
+    /********************************FIN GESTION DU FORMULAIRE ****************************/
+     
+    // Variable qui récupère l'orderId envoyé comme réponse par le serveur lors de la requête POST :
+    var orderId = "";
+
+    
+    /*******************************REQUÊTE DU SERVEUR ET POST DES DONNÉES *******************/
+    
+    
+    function sendFromToServer () {
+        fetch("https://kanap-bd.vercel.app/api/products/order/", {
+            method: "POST",
+            body:JSON.stringify({contact, products}) ,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }) 
+        
+        // Ensuite on stock la réponse de l'api (orderId) :
+        .then((response) => {
+            return response.json();
+        })
+        
+
+        .then((server) => {
+            orderId = server.orderId;
+            // Si la variable orderId n'est pas une chaîne vide on redirige notre utilisateur sur la page confirmation avec la variable :
+            if (orderId != "") {
+                alert("✅ Votre commande à bient était prise en compte ✅");
+                location.href = "confirmation.html?id=" + orderId;
+            }
+        })
+    }
+})
+
+
+/******************************* FIN REQUÊTE DU SERVEUR ET POST DES DONNÉES ***************/
+
