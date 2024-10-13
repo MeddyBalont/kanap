@@ -11,7 +11,7 @@
 ## Tester le projet :
 
 ```terminal
-git clone https://github.com/AdnanElg/Kanap-projet-5.git
+https://github.com/MeddyBalont/kanap.git
 ```
 
 ## Installation :
